@@ -8,14 +8,14 @@ import HomeRedirect from "./HomeRedirect";
 import SettingsPage from "@/features/settings/SettingsPage";
 import ShoppingPage from "@/features/shopping/ShoppingPage";
 import KanbanPage from "@/features/kanban/KanbanPage";
-import TreinosPage from "@/features/treinos/TreinosPage";
+import WorkoutsPage from "@/features/workouts/WorkoutsPage";
 import FinancasPage from "@/features/financas/FinancasPage";
 
 const pages: Partial<Record<ModuleId, ReactNode>> = {
   settings: <SettingsPage />,
   shopping: <ShoppingPage />,
   kanban: <KanbanPage />,
-  workouts: <TreinosPage />,
+  workouts: <WorkoutsPage />,
   finance: <FinancasPage />,
 };
 
