@@ -680,6 +680,7 @@ Os tokens do Tailwind seguem a tabela da seção 2.1, em `src/styles/index.css` 
 3. Camada de repositórios, tradução do código para inglês e correções.
 4. Ligar cada módulo à API, conforme o back fica pronto. **[feito]** Kanban.
 5. Dashboard, Notificações, Login e PWA.
+6. **Estilização final**: etapa dedicada ao visual (tipografia, espaçamentos, animações, mobile), aplicada nos tokens e nos componentes `ui/`. Até lá, toda tela usa só os componentes compartilhados.
 
 ### 15.8 Esboço visual
 

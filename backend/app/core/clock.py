@@ -5,6 +5,7 @@ from zoneinfo import ZoneInfo
 from fastapi import Depends
 
 from app.core.config import settings
+from app.core.models import utc_now
 
 
 def get_now() -> datetime:
@@ -18,3 +19,12 @@ def get_now() -> datetime:
 
 # Shortcut for endpoints: `now: Now`
 Now = Annotated[datetime, Depends(get_now)]
+
+
+def get_utc_now() -> datetime:
+    """Current exact moment in UTC, for timestamps (created, completed, expires...)."""
+    return utc_now()
+
+
+# Shortcut for endpoints: `utc_now: UtcNow`
+UtcNow = Annotated[datetime, Depends(get_utc_now)]
