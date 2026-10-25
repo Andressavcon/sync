@@ -8,6 +8,20 @@ To try it, clone the repository and run it locally (see [Running locally](#runni
 
 > The backend was my first Python project. I come from Java, so the code has comments comparing both worlds (FastAPI ≈ Spring Web, SQLAlchemy ≈ JPA, Alembic ≈ Flyway).
 
+<p>
+  <img src="screenshots/1-dashboard.png" alt="Dashboard" width="100%">
+</p>
+
+| Finance | Workouts | Shopping list |
+|---|---|---|
+| ![Finance](screenshots/4-financas.png) | ![Workouts](screenshots/2-treinos.png) | ![Shopping list](screenshots/3-compras.png) |
+
+| Mobile: Dashboard | Mobile: Finance | Mobile: Workouts | Mobile: Shopping |
+|---|---|---|---|
+| ![Mobile dashboard](screenshots/5-celular-dashboard.png) | ![Mobile finance](screenshots/7-celular-financas.png) | ![Mobile workouts](screenshots/6-celular-treinos.png) | ![Mobile shopping list](screenshots/8-celular-compras.png) |
+
+<sub>Screenshots with fictional demo data.</sub>
+
 ---
 
 ## Modules

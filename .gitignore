@@ -25,3 +25,6 @@ dist/
 
 # SQLite local database
 *.db
+
+# Notes kept next to the screenshots (not published)
+screenshots/*.md
