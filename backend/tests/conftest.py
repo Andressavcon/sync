@@ -14,7 +14,6 @@ from app.core.database import Base, enable_sqlite_foreign_keys, get_db
 from app.main import app as fastapi_app
 from app.modules.users.models import User
 
-
 # Set it to run the same tests on PostgreSQL (CI does): postgresql+psycopg://user:pass@host/db
 TEST_DATABASE_URL = os.environ.get("TEST_DATABASE_URL")
 
