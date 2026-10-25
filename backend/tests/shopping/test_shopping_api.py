@@ -2,7 +2,10 @@ from collections.abc import Callable
 from datetime import timedelta
 
 from fastapi.testclient import TestClient
+from sqlalchemy.orm import Session
 
+from app.modules.shopping.service import DEFAULT_CATEGORIES
+from app.modules.users.models import User
 from tests.shopping.conftest import START
 
 
@@ -246,3 +249,19 @@ def test_suggestions_filter_by_text_and_skip_items_already_on_the_list(
     response = client.get("/api/shopping/suggestions", params={"q": "lei"}).json()
 
     assert response == ["Leite condensado"]
+
+
+# ---------- Default categories ----------
+
+
+def test_new_user_gets_default_categories_once(client: TestClient, db: Session, api_user: User):
+    api_user.shopping_defaults_created = False
+    db.commit()
+
+    first = [c["category"]["name"] for c in get_list(client)["categories"]]
+    assert first == DEFAULT_CATEGORIES
+
+    # Deleting all of them doesn't bring them back
+    for category_id in [c["id"] for c in client.get("/api/shopping/categories").json()]:
+        client.delete(f"/api/shopping/categories/{category_id}")
+    assert get_list(client)["categories"] == []

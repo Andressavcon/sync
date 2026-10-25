@@ -15,9 +15,20 @@ from app.modules.shopping.schemas import (
     ItemUpdate,
     ShoppingListRead,
 )
+from app.modules.users.models import User
 
 ARCHIVE_DAYS = 90  # section 8.5
 MAX_SUGGESTIONS = 8
+# Created once for every new user; editable and reorderable
+DEFAULT_CATEGORIES = [
+    "Hortifruti",
+    "Açougue",
+    "Padaria",
+    "Laticínios",
+    "Mercearia",
+    "Limpeza",
+    "Higiene",
+]
 
 
 def _list_order(item: ShoppingItem) -> tuple[bool, float, float]:
@@ -32,8 +43,10 @@ class ShoppingService:
 
     # ---------- The active list ----------
 
-    def get_list(self, user_id: uuid.UUID) -> ShoppingListRead:
+    def get_list(self, user: User) -> ShoppingListRead:
         """The list ready to show: important section on top, then each category (section 8.2)."""
+        self._create_default_categories_once(user)
+        user_id = user.id
         categories = self.repo.list_categories(user_id)
         items = sorted(self.repo.list_items(user_id), key=_list_order)
 
@@ -112,6 +125,18 @@ class ShoppingService:
                 spelling.setdefault(key, name)
 
         return [spelling[key] for key, _ in counts.most_common(MAX_SUGGESTIONS)]
+
+    def _create_default_categories_once(self, user: User) -> None:
+        if user.shopping_defaults_created:
+            return
+        existing = {c.name.lower() for c in self.repo.list_categories(user.id)}
+        position = self.repo.next_category_position(user.id)
+        for name in DEFAULT_CATEGORIES:
+            if name.lower() not in existing:
+                self.repo.add(ShoppingCategory(user_id=user.id, name=name, position=position))
+                position += 1
+        user.shopping_defaults_created = True
+        self.repo.commit()
 
     def _forget_old_archives(self, user_id: uuid.UUID, now: datetime) -> None:
         self.repo.delete_archives_before(user_id, now - timedelta(days=ARCHIVE_DAYS))

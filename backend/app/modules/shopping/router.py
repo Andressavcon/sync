@@ -38,7 +38,7 @@ router = APIRouter(prefix="/api/shopping", tags=["shopping"])
 @router.get("/list", response_model=ShoppingListRead)
 def get_list(user: CurrentUser, service: ServiceDep) -> ShoppingListRead:
     """Important section on top, then each category with its items."""
-    return service.get_list(user.id)
+    return service.get_list(user)
 
 
 @router.post("/list/complete", response_model=ArchivedListRead, status_code=status.HTTP_201_CREATED)

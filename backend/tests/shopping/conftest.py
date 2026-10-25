@@ -3,11 +3,23 @@ from datetime import UTC, datetime
 
 import pytest
 from fastapi.testclient import TestClient
+from sqlalchemy.orm import Session
 
+from app.core.auth import DEV_USER_EMAIL
 from app.core.clock import get_utc_now
 from app.main import app
+from app.modules.users.models import User
 
 START = datetime(2026, 10, 28, 18, 0, tzinfo=UTC)
+
+
+@pytest.fixture(autouse=True)
+def api_user(db: Session) -> User:
+    """The user the API uses, created without default categories so tests start empty."""
+    user = User(email=DEV_USER_EMAIL, name="Dev User", shopping_defaults_created=True)
+    db.add(user)
+    db.commit()
+    return user
 
 
 @pytest.fixture(autouse=True)
