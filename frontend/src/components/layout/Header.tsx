@@ -5,7 +5,9 @@ import { loginEnabled, signOut } from "@/data/auth";
 import { useNow } from "@/hooks/useNow";
 import NotificationBell from "./NotificationBell";
 
-/** Floating glass pill at the top: logo, today's date, notifications and logout. */
+const isDemo = import.meta.env.VITE_DEMO === "true";
+
+/** Floating glass pill at the top: logo, demo badge, today's date, notifications and logout. */
 export default function Header() {
   const now = useNow();
 
@@ -14,6 +16,14 @@ export default function Header() {
       <span className="text-lg font-bold">
         Sync<span className="text-primary">.</span>
       </span>
+      {isDemo && (
+        <span
+          title="Versão de demonstração: os dados são fictícios e voltam ao original de tempos em tempos"
+          className="rounded-full bg-primary/15 px-3 py-1 text-xs font-medium text-primary"
+        >
+          Demo<span className="hidden sm:inline"> · dados fictícios</span>
+        </span>
+      )}
       <span className="hidden text-sm text-muted first-letter:uppercase sm:block">
         {format(now, "EEEE, d 'de' MMMM", { locale: ptBR })}
       </span>

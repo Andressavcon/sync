@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
     app_name: str = "Sync. API"
-    # "development" or "production"
+    # "development", "production" or "demo" (public showcase: fictional data, no login)
     environment: str = "development"
     # SQLite for local development; PostgreSQL (Supabase) in production
     database_url: str = "sqlite:///./sync.db"
@@ -39,6 +39,12 @@ class Settings(BaseSettings):
                 raise ValueError("SUPABASE_URL is required in production (login)")
             if self.database_url.startswith("sqlite"):
                 raise ValueError("Use PostgreSQL in production (the SQLite file is lost)")
+        if self.environment == "demo":
+            # Anyone can open the demo without login, so it must never reach real data
+            if self.supabase_url:
+                raise ValueError("The demo has no login: leave SUPABASE_URL empty")
+            if not self.database_url.startswith("sqlite"):
+                raise ValueError("The demo uses its own SQLite file, never the real database")
         return self
 
 

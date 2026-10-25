@@ -2,7 +2,8 @@
 
     uv run python -m scripts.seed_demo
 
-Only runs in development mode (no SUPABASE_URL): it ERASES the development user's data first.
+Only runs without login (development or the public demo): it ERASES the development user's
+data first. The demo service runs it on every start, so each start begins with fresh data.
 Everything goes through the real API (like an integration test), so every business rule applies.
 Dates are relative to today, so the data always looks fresh.
 """

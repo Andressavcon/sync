@@ -25,3 +25,24 @@ services:
         sync: false
       - key: CORS_ORIGIN_REGEX # optional, e.g. Vercel previews
         sync: false
+
+  # Public demo for recruiters: no login, fictional data in its own SQLite file (never the real
+  # database). The file is recreated on every start, and the free plan restarts after 15 min idle.
+  - type: web
+    name: sync-demo-api
+    runtime: python
+    plan: free
+    region: ohio
+    rootDir: backend
+    buildCommand: pip install uv && uv sync --frozen --no-dev
+    startCommand: rm -f demo.db && uv run --no-sync alembic upgrade head && uv run --no-sync python -m scripts.seed_demo && uv run --no-sync uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: ENVIRONMENT
+        value: demo
+      - key: TIMEZONE
+        value: America/Sao_Paulo
+      - key: DATABASE_URL
+        value: sqlite:///./demo.db
+      - key: CORS_ORIGINS # ["https://<your-demo>.vercel.app"]
+        sync: false
