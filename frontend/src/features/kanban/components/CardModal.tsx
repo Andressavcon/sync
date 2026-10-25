@@ -16,7 +16,7 @@ import {
   type Tag,
 } from "@/data/repositories/kanbanRepository";
 import { fieldClass } from "@/lib/ui";
-import { STATUS_OPTIONS, type RepeatSettings } from "../types";
+import { REMINDER_OPTIONS, STATUS_OPTIONS, type RepeatSettings } from "../types";
 import { defaultRepeat, describeRecurrence, isRepeatValid, shortTime } from "../utils/format";
 import RepeatFields from "./RepeatFields";
 
@@ -41,6 +41,7 @@ export default function CardModal({ card, initialDate, tags, onClose, onChanged 
   const [dueTime, setDueTime] = useState(card ? shortTime(card.dueTime) : "09:00");
   const [tagIds, setTagIds] = useState<string[]>(card?.tags.map((t) => t.id) ?? []);
   const [content, setContent] = useState(card?.content ?? "");
+  const [remind, setRemind] = useState<number | null>(card?.remindDaysBefore ?? null);
   const [availableTags, setAvailableTags] = useState(tags);
   const [newTag, setNewTag] = useState("");
   // Only when creating: null = doesn't repeat
@@ -84,7 +85,7 @@ export default function CardModal({ card, initialDate, tags, onClose, onChanged 
   }
 
   function cardInput(): CardInput {
-    return { title: title.trim(), content, status, dueDate, dueTime, tagIds };
+    return { title: title.trim(), content, status, dueDate, dueTime, tagIds, remindDaysBefore: remind };
   }
 
   function save() {
@@ -206,6 +207,24 @@ export default function CardModal({ card, initialDate, tags, onClose, onChanged 
             <Input type="time" value={dueTime} onChange={(e) => setDueTime(e.target.value)} />
           </label>
         </div>
+
+        {!repeat && (
+          <label className="flex flex-col gap-1.5">
+            <span className="text-sm font-medium">Lembrete</span>
+            <select
+              className={fieldClass}
+              value={remind ?? ""}
+              onChange={(e) => setRemind(e.target.value === "" ? null : Number(e.target.value))}
+            >
+              {REMINDER_OPTIONS.map((option) => (
+                <option key={option.label} value={option.value ?? ""}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            <span className="text-xs text-muted">Aparece no sino de notificações, só dentro do app.</span>
+          </label>
+        )}
 
         {/* Repeat: new cards can turn it on; recurring cards show the rule */}
         {!card && (

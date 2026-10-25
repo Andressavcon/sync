@@ -16,7 +16,7 @@ const DESCRIPTIONS: Record<ModuleId, string> = {
 
 export default function SettingsPage() {
   const { enabled, toggle } = useModulesStore();
-  const { billReminderDay, weeklyWorkoutGoal, setBillReminderDay, setWeeklyWorkoutGoal } =
+  const { billReminderDay, weeklyWorkoutGoal, setBillReminderDay, setWeeklyWorkoutGoal, error } =
     useSettings();
 
   const toggleable = MODULES.filter((m) => m.toggleable);
@@ -44,14 +44,15 @@ export default function SettingsPage() {
         </p>
       </Card>
 
-      <Card title="Preferências">
+      <Card title="Preferências" description="Salvas no servidor: valem em todos os seus aparelhos.">
         <div className="flex flex-col gap-4">
+          {error && <p className="text-sm text-red-400">{error}</p>}
           <label className="flex flex-col gap-1.5">
             <span className="text-sm font-medium">Lembrete de contas fixas</span>
             <select
               className={fieldClass}
               value={billReminderDay}
-              onChange={(e) => setBillReminderDay(Number(e.target.value))}
+              onChange={(e) => void setBillReminderDay(Number(e.target.value))}
             >
               {Array.from({ length: 28 }, (_, i) => i + 1).map((day) => (
                 <option key={day} value={day}>
@@ -69,7 +70,7 @@ export default function SettingsPage() {
             <select
               className={fieldClass}
               value={weeklyWorkoutGoal}
-              onChange={(e) => setWeeklyWorkoutGoal(Number(e.target.value))}
+              onChange={(e) => void setWeeklyWorkoutGoal(Number(e.target.value))}
             >
               {[1, 2, 3, 4, 5, 6, 7].map((n) => (
                 <option key={n} value={n}>

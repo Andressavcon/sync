@@ -29,3 +29,15 @@ export interface RepeatSettings {
   monthDay: number;
   endDate: string; // empty = repeats forever
 }
+
+/** In-app reminder of a card (section 6): null = off, 0 = on the day */
+export const REMINDER_OPTIONS: { value: number | null; label: string }[] = [
+  { value: null, label: "Sem lembrete" },
+  { value: 0, label: "No dia" },
+  { value: 1, label: "1 dia antes" },
+  { value: 2, label: "2 dias antes" },
+  { value: 3, label: "3 dias antes" },
+  { value: 7, label: "1 semana antes" },
+  { value: 14, label: "2 semanas antes" },
+  { value: 30, label: "1 mês antes" },
+];

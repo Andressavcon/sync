@@ -1,6 +1,12 @@
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
+import { useSettings } from "@/hooks/useSettings";
 
-// Ponto único para providers globais (ex.: contexto de usuário, depois do login).
+/** Global setup when the app opens. */
 export default function Providers({ children }: { children: ReactNode }) {
+  // Preferences saved on the server (the browser copy is used until they arrive)
+  useEffect(() => {
+    void useSettings.getState().load();
+  }, []);
+
   return <>{children}</>;
 }

@@ -22,6 +22,8 @@ export interface Card {
   createdAt: string;
   completedAt: string | null;
   tags: Tag[];
+  /** Reminder (section 6): null = off, 0 = on the day, N = N days before */
+  remindDaysBefore: number | null;
   recurrenceId: string | null;
   occurrenceDate: string | null;
 }
@@ -56,6 +58,7 @@ export interface CardInput {
   dueDate: string;
   dueTime: string;
   tagIds: string[];
+  remindDaysBefore: number | null;
 }
 
 export interface Recurrence {
