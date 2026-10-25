@@ -1,4 +1,5 @@
-import { Menu } from "lucide-react";
+import { LogOut, Menu } from "lucide-react";
+import { loginEnabled, signOut } from "@/data/auth";
 import NotificationBell from "./NotificationBell";
 
 export default function Header({ onMenu }: { onMenu: () => void }) {
@@ -17,6 +18,17 @@ export default function Header({ onMenu }: { onMenu: () => void }) {
       </span>
       <div className="ml-auto flex items-center gap-1">
         <NotificationBell />
+        {loginEnabled && (
+          <button
+            type="button"
+            aria-label="Sair"
+            title="Sair"
+            onClick={() => void signOut()}
+            className="rounded-lg p-2 text-muted hover:bg-surface-hover hover:text-text"
+          >
+            <LogOut size={20} />
+          </button>
+        )}
       </div>
     </header>
   );

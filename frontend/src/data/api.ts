@@ -1,5 +1,7 @@
 /** HTTP client for the Sync. API. Screens never call it directly: they use repositories. */
 
+import { getAccessToken } from "@/data/auth";
+
 // Empty in development (Vite proxies /api to the backend); full URL in production
 const BASE_URL: string = import.meta.env.VITE_API_URL ?? "";
 
@@ -32,11 +34,15 @@ async function request<T>(
   options: { body?: unknown; query?: Query } = {}
 ): Promise<T> {
   const hasBody = options.body !== undefined;
+  const headers: Record<string, string> = {};
+  if (hasBody) headers["Content-Type"] = "application/json";
+  const token = getAccessToken();
+  if (token) headers.Authorization = `Bearer ${token}`; // logged in (section 11)
   let response: Response;
   try {
     response = await fetch(buildUrl(path, options.query), {
       method,
-      headers: hasBody ? { "Content-Type": "application/json" } : undefined,
+      headers,
       body: hasBody ? JSON.stringify(options.body) : undefined,
     });
   } catch {
@@ -76,6 +82,7 @@ export function getErrorMessage(error: unknown): string {
   // The API answers in English; the screen speaks Portuguese
   if (error instanceof ApiError) {
     if (error.status === 0) return error.message;
+    if (error.status === 401) return "Sua sessão expirou. Entre de novo.";
     if (error.status === 404) return "Não encontrado: talvez já tenha sido excluído.";
     if (error.status === 409) return "Já existe um registro com esse nome.";
     if (error.status === 422) return "Dados inválidos. Confira os campos.";
