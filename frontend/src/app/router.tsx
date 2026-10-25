@@ -5,6 +5,7 @@ import ModulePage from "@/components/ui/ModulePage";
 import { MODULES, type ModuleId } from "@/lib/modules";
 import ModuleGuard from "./ModuleGuard";
 import HomeRedirect from "./HomeRedirect";
+import DashboardPage from "@/features/dashboard/DashboardPage";
 import SettingsPage from "@/features/settings/SettingsPage";
 import ShoppingPage from "@/features/shopping/ShoppingPage";
 import KanbanPage from "@/features/kanban/KanbanPage";
@@ -12,6 +13,7 @@ import WorkoutsPage from "@/features/workouts/WorkoutsPage";
 import FinancePage from "@/features/finance/FinancePage";
 
 const pages: Partial<Record<ModuleId, ReactNode>> = {
+  dashboard: <DashboardPage />,
   settings: <SettingsPage />,
   shopping: <ShoppingPage />,
   kanban: <KanbanPage />,
