@@ -25,7 +25,7 @@ def db() -> Iterator[Session]:
     enable_sqlite_foreign_keys(engine)
     Base.metadata.create_all(engine)
 
-    with Session(engine) as session:
+    with Session(engine, autoflush=False) as session:  # same as SessionLocal
         yield session
 
     engine.dispose()

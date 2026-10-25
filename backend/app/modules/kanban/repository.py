@@ -1,10 +1,11 @@
 import uuid
 from collections.abc import Sequence
+from datetime import date
 
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from app.modules.kanban.models import Card, Tag
+from app.modules.kanban.models import Card, CardStatus, RecurrenceRule, Tag
 
 
 class TagRepository:
@@ -73,4 +74,67 @@ class CardRepository:
 
     def delete(self, card: Card) -> None:
         self.db.delete(card)
+        self.db.commit()
+
+    def add_all(self, cards: list[Card]) -> None:
+        """Stages new cards; the caller commits."""
+        self.db.add_all(cards)
+
+    def open_occurrences(self, recurrence_id: uuid.UUID, from_date: date) -> Sequence[Card]:
+        """Occurrences of a rule from `from_date` on that are not done yet."""
+        return self.db.scalars(
+            select(Card).where(
+                Card.recurrence_id == recurrence_id,
+                Card.occurrence_date >= from_date,
+                Card.status != CardStatus.DONE,
+            )
+        ).all()
+
+    def occurrence_dates(self, recurrence_id: uuid.UUID, from_date: date) -> set[date]:
+        """Dates that already have an occurrence (done or not), to never create duplicates."""
+        return set(
+            self.db.scalars(
+                select(Card.occurrence_date).where(
+                    Card.recurrence_id == recurrence_id, Card.occurrence_date >= from_date
+                )
+            ).all()
+        )
+
+    def delete_many(self, cards: Sequence[Card]) -> None:
+        """Stages the deletion; the caller commits."""
+        for card in cards:
+            self.db.delete(card)
+
+    def flush(self) -> None:
+        """Sends pending changes to the database without committing (e.g. deletes first)."""
+        self.db.flush()
+
+
+class RecurrenceRepository:
+    def __init__(self, db: Session):
+        self.db = db
+
+    def list(self, user_id: uuid.UUID) -> Sequence[RecurrenceRule]:
+        return self.db.scalars(
+            select(RecurrenceRule)
+            .where(RecurrenceRule.user_id == user_id)
+            .order_by(RecurrenceRule.title)
+        ).all()
+
+    def get(self, user_id: uuid.UUID, rule_id: uuid.UUID) -> RecurrenceRule | None:
+        return self.db.scalars(
+            select(RecurrenceRule).where(
+                RecurrenceRule.user_id == user_id, RecurrenceRule.id == rule_id
+            )
+        ).first()
+
+    def add(self, rule: RecurrenceRule) -> None:
+        """Stages the new rule; the caller commits."""
+        self.db.add(rule)
+
+    def delete(self, rule: RecurrenceRule) -> None:
+        """Stages the deletion; the caller commits."""
+        self.db.delete(rule)
+
+    def commit(self) -> None:
         self.db.commit()

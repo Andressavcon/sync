@@ -1,11 +1,12 @@
 import uuid
 from datetime import date, datetime, time
+from enum import StrEnum
 from typing import Annotated
 
 from pydantic import Field, StringConstraints
 
 from app.core.schemas import ApiModel
-from app.modules.kanban.models import CardStatus
+from app.modules.kanban.models import CardStatus, Frequency
 
 # Trimmed, non-empty text (like @NotBlank @Size(max = ...))
 TagName = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=50)]
@@ -61,6 +62,60 @@ class CardRead(ApiModel):
     created_at: datetime
     completed_at: datetime | None
     tags: list[TagRead]
+    # Set only on occurrences of a recurring card: the app must ask "only this or following?"
+    recurrence_id: uuid.UUID | None
+    occurrence_date: date | None
+
+
+class Scope(StrEnum):
+    """Editing or deleting an occurrence of a recurring card (section 4.10)."""
+
+    THIS = "this"  # only this occurrence
+    FOLLOWING = "following"  # this one and the next ones
+
+
+# ---------- Recurrence rules (section 4.10) ----------
+
+Weekday = Annotated[int, Field(ge=0, le=6)]  # Monday = 0 ... Sunday = 6
+MonthDay = Annotated[int, Field(ge=1, le=31)]
+
+
+class RecurrenceCreate(ApiModel):
+    title: CardTitle
+    content: str = ""
+    due_time: time
+    tag_ids: list[uuid.UUID] = Field(default_factory=list)
+    frequency: Frequency
+    weekdays: list[Weekday] = Field(default_factory=list)
+    month_day: MonthDay | None = None
+    start_date: date
+    end_date: date | None = None
+
+
+class RecurrenceUpdate(ApiModel):
+    """PATCH: changes the rule from today on (future open occurrences are regenerated)."""
+
+    title: CardTitle | None = None
+    content: str | None = None
+    due_time: time | None = None
+    tag_ids: list[uuid.UUID] | None = None
+    frequency: Frequency | None = None
+    weekdays: list[Weekday] | None = None
+    month_day: MonthDay | None = None
+    end_date: date | None = None  # send null to remove the end date
+
+
+class RecurrenceRead(ApiModel):
+    id: uuid.UUID
+    title: str
+    content: str
+    due_time: time
+    tags: list[TagRead]
+    frequency: Frequency
+    weekdays: list[int]
+    month_day: int | None
+    start_date: date
+    end_date: date | None
 
 
 # ---------- Week board (section 4.8) ----------

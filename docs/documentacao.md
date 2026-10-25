@@ -197,20 +197,25 @@ Relação: um card pode ter várias tags, e uma tag pode estar em vários cards.
 ### 4.10 Tarefas recorrentes
 
 - **[definido]** O card pode ser marcado como recorrente, para não precisar cadastrar de novo toda vez.
-- **[sugestão]** Frequências: todo dia, toda semana (escolhendo os dias), todo mês (escolhendo o dia do mês).
-- **[sugestão]** Data de início e, opcionalmente, data de fim. Sem data de fim, repete sem parar.
-- **[sugestão]** Cada ocorrência é um card independente: concluir uma não afeta as outras.
-- **[sugestão]** A ocorrência aparece na semana correspondente. Ocorrências futuras não são listadas todas; em Eventos futuros aparece apenas a próxima.
-- **[sugestão]** Ocorrência não concluída segue a regra normal de atrasado (ícone na semana, seção Atrasados depois), sem gerar duplicata.
+- **[definido]** Frequências: todo dia, toda semana (escolhendo os dias), todo mês (escolhendo o dia do mês).
+- **[definido]** Mensal em dia que o mês não tem (ex.: 31): cai no **último dia** do mês (fevereiro → 28 ou 29).
+- **[definido]** Data de início e, opcionalmente, data de fim. Sem data de fim, repete sem parar.
+- **[definido]** Cada ocorrência é um card independente: concluir, arrastar ou editar uma não afeta as outras.
+- **[definido]** As ocorrências são criadas quando o quadro é aberto: as da **semana atual** e só a **próxima** depois dela, que aparece em Eventos futuros.
+- **[definido]** Uma ocorrência excluída sozinha ("só esta") ou arrastada para outro dia não é recriada.
+- **[definido]** Ocorrência não concluída segue a regra normal de atrasado (ícone na semana, seção Atrasados depois), sem gerar duplicata.
 - **[definido]** Ao editar ou excluir, o app pergunta: "só esta ocorrência" ou "esta e as próximas".
-- **[sugestão]** Parar a repetição = definir data de fim ou excluir a regra.
+- **[definido]** Editar "esta e as próximas": título, anotações, hora e tags mudam na regra e nas próximas ocorrências **não concluídas**. Status e data mudam só no card escolhido. As concluídas nunca mudam.
+- **[definido]** Excluir "esta e as próximas": a regra termina no dia anterior e as próximas ocorrências não concluídas são apagadas.
+- **[definido]** Mudar a regra (frequência, dias, data de fim...) vale **a partir de hoje**: as ocorrências não concluídas de hoje em diante são refeitas.
+- **[definido]** Excluir a regra apaga as ocorrências não concluídas de hoje em diante. As passadas ficam como cards comuns.
 
 Fluxo:
 1. No card, ativar "repetir" e escolher frequência, dias e data de fim (opcional).
 2. Salvar. A ocorrência da semana atual aparece na coluna do dia.
 3. Quando chega uma nova semana, a ocorrência correspondente aparece automaticamente.
 
-Modelo de dados (rascunho): **Regra de repetição** com id, card modelo, frequência, dias, data de início, data de fim. Cada ocorrência gerada é um Card comum ligado à regra.
+Modelo de dados: **Regra de repetição** (`recurrence_rules`) com o modelo do card (título, anotações, hora, tags), frequência, dias da semana, dia do mês, data de início, data de fim e até onde já gerou. Cada ocorrência é um Card comum com o id da regra e a data para a qual foi gerada.
 
 ---
 
