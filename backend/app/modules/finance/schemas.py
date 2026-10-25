@@ -249,3 +249,8 @@ class MonthSummary(ApiModel):
     income: Amount
     expenses: Amount
     balance: Amount
+
+
+class SuggestedInvoice(ApiModel):
+    month: str
+    due_date: date

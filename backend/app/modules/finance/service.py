@@ -29,6 +29,7 @@ from app.modules.finance.schemas import (
     CurrentInvoice,
     InstallmentCreate,
     InvoiceRead,
+    SuggestedInvoice,
     TransactionCreate,
     TransactionRead,
     TransactionUpdate,
@@ -97,6 +98,13 @@ class CardService:
         return card
 
     # ---------- Invoices ----------
+
+    def suggested_invoice(
+        self, user_id: uuid.UUID, card_id: uuid.UUID, day: date
+    ) -> SuggestedInvoice:
+        card = self.get(user_id, card_id)
+        month = self.suggest(card, day)
+        return SuggestedInvoice(month=month, due_date=due_date(card, month))
 
     def invoice(self, user_id: uuid.UUID, card_id: uuid.UUID, month: str) -> InvoiceRead:
         card = self.get(user_id, card_id)

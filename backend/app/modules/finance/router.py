@@ -37,6 +37,7 @@ from app.modules.finance.schemas import (
     PotUpdate,
     SalaryRead,
     SalaryUpdate,
+    SuggestedInvoice,
     TransactionCreate,
     TransactionRead,
     TransactionUpdate,
@@ -294,3 +295,11 @@ def available(user: CurrentUser, service: BudgetServiceDep, now: Now) -> Availab
 @router.get("/summary", response_model=MonthSummary)
 def month_summary(month: MonthQuery, user: CurrentUser, service: BudgetServiceDep) -> MonthSummary:
     return service.month_summary(user.id, month)
+
+
+@router.get("/cards/{card_id}/suggested-invoice", response_model=SuggestedInvoice)
+def suggested_invoice(
+    card_id: uuid.UUID, day: Annotated[date, Query()], user: CurrentUser, service: CardServiceDep
+) -> SuggestedInvoice:
+    """Invoice a purchase on `day` would fall into (shown in the form before saving)."""
+    return service.suggested_invoice(user.id, card_id, day)

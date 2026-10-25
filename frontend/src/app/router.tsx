@@ -9,14 +9,14 @@ import SettingsPage from "@/features/settings/SettingsPage";
 import ShoppingPage from "@/features/shopping/ShoppingPage";
 import KanbanPage from "@/features/kanban/KanbanPage";
 import WorkoutsPage from "@/features/workouts/WorkoutsPage";
-import FinancasPage from "@/features/financas/FinancasPage";
+import FinancePage from "@/features/finance/FinancePage";
 
 const pages: Partial<Record<ModuleId, ReactNode>> = {
   settings: <SettingsPage />,
   shopping: <ShoppingPage />,
   kanban: <KanbanPage />,
   workouts: <WorkoutsPage />,
-  finance: <FinancasPage />,
+  finance: <FinancePage />,
 };
 
 const moduleRoutes: RouteObject[] = MODULES.map((m) => ({

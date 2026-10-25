@@ -309,3 +309,11 @@ def test_invoice_month_in_the_url_is_validated(client: TestClient, nubank: dict)
     response = client.get(f"/api/finance/cards/{nubank['id']}/invoices/2026-13")
 
     assert response.status_code == 422
+
+
+def test_suggested_invoice_for_a_purchase_day(client: TestClient, nubank: dict):
+    response = client.get(
+        f"/api/finance/cards/{nubank['id']}/suggested-invoice", params={"day": "2026-10-09"}
+    )
+
+    assert response.json() == {"month": "2026-11", "dueDate": "2026-11-15"}
