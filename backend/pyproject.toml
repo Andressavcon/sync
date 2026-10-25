@@ -1,0 +1,31 @@
+[project]
+name = "sync-backend"
+version = "0.1.0"
+description = "Sync. API: Kanban, workouts, shopping list and personal finance"
+authors = [
+    { name = "Andressavcon", email = "andressavconrado@gmail.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "fastapi[standard]>=0.162.0",
+    "pydantic-settings>=2.16.1",
+    "sqlalchemy>=2.1.6",
+]
+
+# Pytest settings (like the surefire plugin config in a pom.xml)
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]  # lets tests import the "app" package
+
+# Ruff: linter + formatter
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]  # errors, pyflakes, import order, modern syntax, bug patterns
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "ruff>=0.17.2",
+]
