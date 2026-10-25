@@ -10,6 +10,8 @@ from app.modules.kanban.models import CardStatus, Frequency
 # Trimmed, non-empty text (like @NotBlank @Size(max = ...))
 TagName = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=50)]
 CardTitle = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=200)]
+# Reminder: 0 = on the day, N = N days before (section 6)
+RemindDays = Annotated[int, Field(ge=0, le=365)]
 
 
 # ---------- Tags ----------
@@ -38,6 +40,7 @@ class CardCreate(ApiModel):
     due_date: date
     due_time: time
     tag_ids: list[uuid.UUID] = Field(default_factory=list)
+    remind_days_before: RemindDays | None = None
 
 
 class CardUpdate(ApiModel):
@@ -49,6 +52,7 @@ class CardUpdate(ApiModel):
     due_date: date | None = None
     due_time: time | None = None
     tag_ids: list[uuid.UUID] | None = None
+    remind_days_before: RemindDays | None = None  # send null to turn the reminder off
 
 
 class CardRead(ApiModel):
@@ -61,6 +65,7 @@ class CardRead(ApiModel):
     created_at: datetime
     completed_at: datetime | None
     tags: list[TagRead]
+    remind_days_before: int | None
     # Set only on occurrences of a recurring card: the app must ask "only this or following?"
     recurrence_id: uuid.UUID | None
     occurrence_date: date | None

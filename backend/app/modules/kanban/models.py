@@ -114,6 +114,9 @@ class Card(IdMixin, CreatedAtMixin, Base):
     # When it was marked as done (section 4.4); None while not done
     completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
+    # In-app reminder (section 6): None = off, 0 = on the day, 3 = three days before
+    remind_days_before: Mapped[int | None]
+
     # Only for occurrences of a recurrence rule
     recurrence_id: Mapped[uuid.UUID | None] = mapped_column(
         ForeignKey("recurrence_rules.id", ondelete="SET NULL", name="fk_cards_recurrence_id_rules"),

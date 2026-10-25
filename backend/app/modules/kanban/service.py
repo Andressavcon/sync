@@ -213,6 +213,7 @@ class CardService:
             due_time=data.due_time,
             tags=load_tags(self.tags, user_id, data.tag_ids),
             completed_at=utc_now() if data.status == CardStatus.DONE else None,
+            remind_days_before=data.remind_days_before,
         )
         return self.cards.add(card)
 
@@ -222,6 +223,9 @@ class CardService:
         card = self.get(user_id, card_id)
         # Only the fields the client actually sent (PATCH semantics)
         changes = data.model_dump(exclude_unset=True, exclude_none=True)
+        # The reminder can be turned off with an explicit null
+        if "remind_days_before" in data.model_fields_set:
+            changes["remind_days_before"] = data.remind_days_before
 
         new_tags = None
         if "tag_ids" in changes:
