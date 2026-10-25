@@ -135,3 +135,117 @@ class InvoiceClosing(ApiModel):
 
 class InvoicePaid(ApiModel):
     paid: bool
+
+
+# ---------- Fixed bills (section 9.5) ----------
+
+
+class FixedBillCreate(ApiModel):
+    name: Name
+    amount: Money
+    due_day: DayOfMonth
+
+
+class FixedBillUpdate(ApiModel):
+    name: Name | None = None
+    amount: Money | None = None  # the usual value (from now on)
+    due_day: DayOfMonth | None = None
+
+
+class FixedBillRead(ApiModel):
+    id: uuid.UUID
+    name: str
+    amount: Amount
+    due_day: int
+
+
+class FixedBillMonthUpdate(ApiModel):
+    """This month only: the real value when the bill arrives, and/or paid."""
+
+    amount: Annotated[Decimal, Field(ge=0, max_digits=12, decimal_places=2)] | None = None
+    paid: bool | None = None
+
+
+class FixedBillOfMonth(ApiModel):
+    bill: FixedBillRead
+    month: str
+    amount: Amount  # the value for this month
+    due_date: date
+    paid: bool
+    paid_at: datetime | None
+
+
+class FixedBillsMonth(ApiModel):
+    month: str
+    bills: list[FixedBillOfMonth]
+    pending_total: Amount
+
+
+# ---------- Savings pots (section 9.5) ----------
+
+
+class PotCreate(ApiModel):
+    name: Name
+
+
+class PotUpdate(ApiModel):
+    name: Name
+
+
+class PotMoney(ApiModel):
+    amount: Money
+
+
+class PotBalance(ApiModel):
+    """Direct correction of the value: doesn't change the available amount."""
+
+    balance: Annotated[Decimal, Field(ge=0, max_digits=12, decimal_places=2)]
+
+
+class PotRead(ApiModel):
+    id: uuid.UUID
+    name: str
+    balance: Amount
+
+
+class PotsRead(ApiModel):
+    pots: list[PotRead]
+    total: Amount
+
+
+# ---------- Salary and overview (section 9.6) ----------
+
+
+class SalaryUpdate(ApiModel):
+    amount: Annotated[Decimal, Field(ge=0, max_digits=12, decimal_places=2)]
+    day: DayOfMonth
+
+
+class SalaryRead(ApiModel):
+    amount: Amount
+    day: int
+    configured: bool  # false until the user sets it
+
+
+class AvailableRead(ApiModel):
+    cycle_start: date
+    cycle_last_day: date
+    days_left: int
+    salary: Amount
+    fixed_bills: Amount
+    invoices: Amount
+    one_off_expenses: Amount
+    saved: Amount
+    extra_income: Amount
+    total: Amount
+    weeks_left: int
+    per_week: Amount
+
+
+class MonthSummary(ApiModel):
+    """Month totals. Paying invoices and saving in pots are not incomes or expenses."""
+
+    month: str
+    income: Amount
+    expenses: Amount
+    balance: Amount

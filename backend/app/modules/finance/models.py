@@ -91,3 +91,88 @@ class Transaction(IdMixin, CreatedAtMixin, Base):
 
     # Extra income: counts in the money available to spend or not (section 9.6)
     count_in_available: Mapped[bool] = mapped_column(default=False)
+
+
+# ---------- Fixed monthly bills (section 9.2) ----------
+
+
+class FixedBill(IdMixin, CreatedAtMixin, Base):
+    """Rent, condo, gas, phone: outside the cards, paid every month."""
+
+    __tablename__ = "fixed_bills"
+
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), index=True
+    )
+    name: Mapped[str] = mapped_column(String(50))
+    amount: Mapped[Decimal] = mapped_column(MONEY)  # usual value; each month can differ
+    due_day: Mapped[int]
+
+
+class FixedBillMonth(IdMixin, Base):
+    """One month of a bill. Only exists after its value was edited or it was paid."""
+
+    __tablename__ = "fixed_bill_months"
+    __table_args__ = (UniqueConstraint("bill_id", "month"),)
+
+    bill_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("fixed_bills.id", ondelete="CASCADE"), index=True
+    )
+    month: Mapped[str] = mapped_column(String(7))
+    amount: Mapped[Decimal] = mapped_column(MONEY)
+    paid: Mapped[bool] = mapped_column(default=False)
+    paid_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+
+# ---------- Savings pots (section 9.2) ----------
+
+
+class MovementKind(StrEnum):
+    DEPOSIT = "deposit"  # money leaves the available amount
+    WITHDRAW = "withdraw"  # money comes back to it
+
+
+class SavingsPot(IdMixin, CreatedAtMixin, Base):
+    """Viagem, Emergência...: only the current value, no history or goal."""
+
+    __tablename__ = "savings_pots"
+
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), index=True
+    )
+    name: Mapped[str] = mapped_column(String(50))
+    balance: Mapped[Decimal] = mapped_column(MONEY, default=Decimal("0"))
+
+
+class PotMovement(IdMixin, CreatedAtMixin, Base):
+    """Deposits and withdrawals, kept only for the cycle calculation (not shown as history).
+
+    They survive the pot being deleted, so deleting doesn't change the available amount.
+    """
+
+    __tablename__ = "pot_movements"
+
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), index=True
+    )
+    pot_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("savings_pots.id", ondelete="SET NULL"), index=True
+    )
+    kind: Mapped[MovementKind] = mapped_column(_enum_column(MovementKind))
+    amount: Mapped[Decimal] = mapped_column(MONEY)
+    day: Mapped[date] = mapped_column(index=True)
+
+
+# ---------- Salary (section 9.6) ----------
+
+
+class Salary(Base):
+    """Value and day it arrives: the cycle goes from one salary to the next (section 9.7)."""
+
+    __tablename__ = "salaries"
+
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), primary_key=True
+    )
+    amount: Mapped[Decimal] = mapped_column(MONEY)
+    day: Mapped[int]
