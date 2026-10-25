@@ -61,3 +61,29 @@ class CardRead(ApiModel):
     created_at: datetime
     completed_at: datetime | None
     tags: list[TagRead]
+
+
+# ---------- Week board (section 4.8) ----------
+
+
+class BoardCardRead(ApiModel):
+    card: CardRead
+    is_late: bool
+    # Countdown: 0 = today, 1 = tomorrow, negative = days ago
+    days_until: int
+
+
+class BoardDayRead(ApiModel):
+    date: date
+    is_today: bool
+    cards: list[BoardCardRead]
+
+
+class BoardRead(ApiModel):
+    today: date
+    week_start: date
+    week_end: date
+    days: list[BoardDayRead]
+    overdue: list[BoardCardRead]
+    upcoming: list[BoardCardRead]
+    done: list[BoardCardRead]

@@ -2,13 +2,16 @@ import uuid
 from collections.abc import Sequence
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Query, status
 
 from app.core.auth import CurrentUser
+from app.core.clock import Now
 from app.core.database import DbSession
+from app.modules.kanban.board import Board
 from app.modules.kanban.models import Card, Tag
 from app.modules.kanban.repository import CardRepository, TagRepository
 from app.modules.kanban.schemas import (
+    BoardRead,
     CardCreate,
     CardRead,
     CardUpdate,
@@ -32,6 +35,20 @@ TagServiceDep = Annotated[TagService, Depends(get_tag_service)]
 CardServiceDep = Annotated[CardService, Depends(get_card_service)]
 
 router = APIRouter(prefix="/api", tags=["kanban"])
+
+
+# ---------- Board ----------
+
+
+@router.get("/kanban/board", response_model=BoardRead)
+def get_board(
+    user: CurrentUser,
+    service: CardServiceDep,
+    now: Now,
+    tag_ids: Annotated[list[uuid.UUID] | None, Query(alias="tagIds")] = None,
+) -> Board:
+    """Current week board. Filter by tags with ?tagIds=<id>&tagIds=<id>."""
+    return service.board(user.id, now, tag_ids)
 
 
 # ---------- Tags ----------

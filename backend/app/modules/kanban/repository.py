@@ -48,10 +48,12 @@ class CardRepository:
     def __init__(self, db: Session):
         self.db = db
 
-    def list(self, user_id: uuid.UUID) -> Sequence[Card]:
-        return self.db.scalars(
-            select(Card).where(Card.user_id == user_id).order_by(Card.due_date, Card.due_time)
-        ).all()
+    def list(self, user_id: uuid.UUID, tag_ids: list[uuid.UUID] | None = None) -> Sequence[Card]:
+        """All the user's cards; with tag_ids, only cards that have at least one of them."""
+        query = select(Card).where(Card.user_id == user_id)
+        if tag_ids:
+            query = query.where(Card.tags.any(Tag.id.in_(tag_ids)))
+        return self.db.scalars(query.order_by(Card.due_date, Card.due_time)).all()
 
     def get(self, user_id: uuid.UUID, card_id: uuid.UUID) -> Card | None:
         return self.db.scalars(

@@ -1,8 +1,10 @@
 import uuid
 from collections.abc import Sequence
+from datetime import datetime
 
 from app.core.exceptions import ConflictError, InvalidDataError, NotFoundError
 from app.core.models import utc_now
+from app.modules.kanban.board import Board, build_board
 from app.modules.kanban.models import Card, CardStatus, Tag
 from app.modules.kanban.repository import CardRepository, TagRepository
 from app.modules.kanban.schemas import CardCreate, CardUpdate, TagCreate, TagUpdate
@@ -50,6 +52,12 @@ class CardService:
 
     def list(self, user_id: uuid.UUID) -> Sequence[Card]:
         return self.cards.list(user_id)
+
+    def board(
+        self, user_id: uuid.UUID, now: datetime, tag_ids: list[uuid.UUID] | None = None
+    ) -> Board:
+        """The current week, already split into days and sections."""
+        return build_board(self.cards.list(user_id, tag_ids), now)
 
     def get(self, user_id: uuid.UUID, card_id: uuid.UUID) -> Card:
         card = self.cards.get(user_id, card_id)

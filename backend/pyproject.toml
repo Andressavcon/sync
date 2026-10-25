@@ -11,6 +11,7 @@ dependencies = [
     "fastapi[standard]>=0.162.0",
     "pydantic-settings>=2.16.1",
     "sqlalchemy>=2.1.6",
+    "tzdata>=2026.5",
 ]
 
 # Pytest settings (like the surefire plugin config in a pom.xml)

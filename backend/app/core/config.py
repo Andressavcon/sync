@@ -11,6 +11,8 @@ class Settings(BaseSettings):
     database_url: str = "sqlite:///./sync.db"
     # Frontend addresses allowed to call the API (Vite dev server by default)
     cors_origins: list[str] = ["http://localhost:5173"]
+    # User's time zone: decides "today", "this week" and what is late
+    timezone: str = "America/Sao_Paulo"
 
 
 settings = Settings()
