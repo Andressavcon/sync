@@ -1,5 +1,14 @@
+from enum import StrEnum
+
 from pydantic import BaseModel, ConfigDict
 from pydantic.alias_generators import to_camel
+
+
+class Scope(StrEnum):
+    """Editing or deleting one item of a series (recurring card, installments)."""
+
+    THIS = "this"  # only this one
+    FOLLOWING = "following"  # this one and the next ones
 
 
 class ApiModel(BaseModel):

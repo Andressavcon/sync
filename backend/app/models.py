@@ -3,6 +3,7 @@
 Add a line here whenever a new module gets a models.py.
 """
 
+from app.modules.finance.models import CreditCard, Invoice, Transaction
 from app.modules.kanban.models import Card, RecurrenceRule, Tag, card_tags, recurrence_tags
 from app.modules.shopping.models import ArchivedItem, ArchivedList, ShoppingCategory, ShoppingItem
 from app.modules.users.models import User
@@ -17,11 +18,14 @@ __all__ = [
     "ArchivedItem",
     "ArchivedList",
     "Card",
+    "CreditCard",
+    "Invoice",
     "RecurrenceRule",
     "ShoppingCategory",
     "ShoppingItem",
     "StandaloneWorkout",
     "Tag",
+    "Transaction",
     "User",
     "WorkoutBlock",
     "WorkoutProgram",

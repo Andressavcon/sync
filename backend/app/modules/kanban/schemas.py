@@ -1,11 +1,10 @@
 import uuid
 from datetime import date, datetime, time
-from enum import StrEnum
 from typing import Annotated
 
 from pydantic import Field, StringConstraints
 
-from app.core.schemas import ApiModel
+from app.core.schemas import ApiModel, Scope  # noqa: F401  (Scope re-exported)
 from app.modules.kanban.models import CardStatus, Frequency
 
 # Trimmed, non-empty text (like @NotBlank @Size(max = ...))
@@ -65,13 +64,6 @@ class CardRead(ApiModel):
     # Set only on occurrences of a recurring card: the app must ask "only this or following?"
     recurrence_id: uuid.UUID | None
     occurrence_date: date | None
-
-
-class Scope(StrEnum):
-    """Editing or deleting an occurrence of a recurring card (section 4.10)."""
-
-    THIS = "this"  # only this occurrence
-    FOLLOWING = "following"  # this one and the next ones
 
 
 # ---------- Recurrence rules (section 4.10) ----------
