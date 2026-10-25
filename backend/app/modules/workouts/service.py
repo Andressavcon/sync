@@ -176,8 +176,11 @@ class WorkoutService:
     ) -> WorkoutBlock:
         block = self._get_block(user_id, block_id)
         self._ensure_editable(block.day, today)
-        changes = data.model_dump(exclude_unset=True, exclude_none=True)
+        changes = data.model_dump(exclude_unset=True)
         new_state = changes.pop("state", None)
+        if changes.get("step_index") is None:
+            changes.pop("step_index", None)
+        # remaining_ms may be sent as null on purpose: "no time left saved" (manual steps)
 
         for field, value in changes.items():
             setattr(block, field, value)

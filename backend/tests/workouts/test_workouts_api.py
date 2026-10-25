@@ -258,3 +258,14 @@ def test_month_history(client: TestClient):
 
 def test_month_must_be_yyyy_mm(client: TestClient):
     assert client.get("/api/workouts/history", params={"month": "2026-13"}).status_code == 422
+
+
+def test_remaining_time_can_be_cleared_with_null(client: TestClient):
+    block = add_block(client, create_standalone(client), "standalone")
+    client.patch(f"/api/workouts/blocks/{block['id']}", json={"stepIndex": 1, "remainingMs": 9000})
+
+    updated = client.patch(
+        f"/api/workouts/blocks/{block['id']}", json={"stepIndex": 2, "remainingMs": None}
+    ).json()
+
+    assert (updated["stepIndex"], updated["remainingMs"]) == (2, None)
