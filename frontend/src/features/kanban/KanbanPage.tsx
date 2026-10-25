@@ -9,70 +9,112 @@ import {
   type DragEndEvent,
   type DragStartEvent,
 } from "@dnd-kit/core";
-import { format, isSameDay } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Plus } from "lucide-react";
 import Button from "@/components/ui/Button";
-import { useNow } from "@/hooks/useNow";
+import { getErrorMessage } from "@/data/api";
+import {
+  kanbanRepository,
+  type Board,
+  type BoardCard,
+  type Card,
+} from "@/data/repositories/kanbanRepository";
 import CardItem from "./components/CardItem";
 import CardModal from "./components/CardModal";
 import KanbanColumn from "./components/KanbanColumn";
 import KanbanFilters from "./components/KanbanFilters";
-import { useKanban } from "./hooks/useKanban";
-import { calcularSecoes, diasDaSemana } from "./utils/secoes";
-import type { KanbanCard, Mostrar } from "./types";
+import TagManagerModal from "./components/TagManagerModal";
+import { useBoard } from "./hooks/useBoard";
+import { useTags } from "./hooks/useTags";
+import type { Visibility } from "./types";
 
 interface Editor {
-  card?: KanbanCard;
-  dataInicial?: string;
+  card?: Card;
+  initialDate?: string;
+}
+
+const longDate = (date: string) => format(parseISO(date), "d 'de' MMMM", { locale: ptBR });
+const shortDate = (date: string) => format(parseISO(date), "d 'de' MMM", { locale: ptBR });
+
+function allItems(board: Board): BoardCard[] {
+  return [...board.days.flatMap((d) => d.cards), ...board.overdue, ...board.upcoming, ...board.done];
 }
 
 export default function KanbanPage() {
-  const { cards, tags, updateCard, moverParaDia } = useKanban();
-  const now = useNow();
-
-  const [mostrar, setMostrar] = useState<Mostrar>({
-    finalizados: true,
-    atrasados: true,
-    futuros: true,
+  const [visibility, setVisibility] = useState<Visibility>({
+    overdue: true,
+    upcoming: true,
+    done: true,
   });
-  const [tagsSelecionadas, setTagsSelecionadas] = useState<string[]>([]);
-  const [editor, setEditor] = useState<Editor | null>(null);
-  const [arrastando, setArrastando] = useState<KanbanCard | null>(null);
+  const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
+  const { tags, reload: reloadTags } = useTags();
+  // Ignore selected tags that were deleted in the meantime
+  const activeTagIds = selectedTagIds.filter((id) => tags.some((t) => t.id === id));
+  const { board, error, reload: reloadBoard } = useBoard(activeTagIds);
 
-  // Mouse arrasta após mover 6px; toque exige segurar um instante, para a rolagem continuar funcionando
-  const sensores = useSensors(
+  const [editor, setEditor] = useState<Editor | null>(null);
+  const [managingTags, setManagingTags] = useState(false);
+  const [dragging, setDragging] = useState<BoardCard | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
+
+  // Mouse drags after moving 6px; touch needs a short hold, so scrolling still works
+  const sensors = useSensors(
     useSensor(MouseSensor, { activationConstraint: { distance: 6 } }),
     useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 6 } })
   );
 
-  const visiveis = tagsSelecionadas.length
-    ? cards.filter((c) => c.tags.some((t) => tagsSelecionadas.includes(t)))
-    : cards;
-  const secoes = calcularSecoes(visiveis, now);
-  const dias = diasDaSemana(now);
-
-  const colunaProps = {
-    tags,
-    now,
-    onAbrir: (card: KanbanCard) => setEditor({ card }),
-  };
-
-  function aoComecar(e: DragStartEvent) {
-    setArrastando(cards.find((c) => c.id === e.active.id) ?? null);
+  function reloadAll() {
+    void reloadBoard();
+    void reloadTags();
   }
 
-  function aoSoltar(e: DragEndEvent) {
-    setArrastando(null);
-    if (!e.over) return;
-    const id = String(e.active.id);
-    const alvo = String(e.over.id);
-    if (alvo.startsWith("dia:")) moverParaDia(id, alvo.slice(4));
-    else if (alvo === "secao:finalizados") updateCard(id, { status: "feito" });
+  /** Runs a change from the board itself (dragging) and reloads it. */
+  async function change(action: () => Promise<unknown>) {
+    setActionError(null);
+    try {
+      await action();
+    } catch (e) {
+      setActionError(getErrorMessage(e));
+    }
+    await reloadBoard();
   }
 
-  const inicioSemana = format(dias[0], "d 'de' MMM", { locale: ptBR });
-  const fimSemana = format(dias[6], "d 'de' MMM", { locale: ptBR });
+  if (!board) {
+    return (
+      <p className={`py-10 text-center ${error ? "text-red-400" : "text-muted"}`}>
+        {error ?? "Carregando…"}
+      </p>
+    );
+  }
+
+  function onDragStart(e: DragStartEvent) {
+    setDragging(allItems(board!).find((i) => i.card.id === e.active.id) ?? null);
+  }
+
+  function onDragEnd(e: DragEndEvent) {
+    setDragging(null);
+    const item = allItems(board!).find((i) => i.card.id === e.active.id);
+    if (!e.over || !item) return;
+    const { card } = item;
+    const target = String(e.over.id);
+
+    if (target.startsWith("day:")) {
+      const date = target.slice(4);
+      if (date === card.dueDate && card.status !== "done") return;
+      // New date, same time; a finished card dragged back to a day reopens (section 4.4)
+      void change(() =>
+        kanbanRepository.updateCard(card.id, {
+          dueDate: date,
+          ...(card.status === "done" ? { status: "pending" as const } : {}),
+        })
+      );
+    } else if (target === "section:done" && card.status !== "done") {
+      void change(() => kanbanRepository.updateCard(card.id, { status: "done" }));
+    }
+  }
+
+  const openCard = (card: Card) => setEditor({ card });
 
   return (
     <div className="mx-auto flex max-w-[1800px] flex-col gap-4">
@@ -80,7 +122,7 @@ export default function KanbanPage() {
         <div>
           <h1 className="text-2xl font-semibold">Kanban</h1>
           <p className="text-sm text-muted">
-            Semana de {inicioSemana} a {fimSemana}
+            Semana de {shortDate(board.weekStart)} a {shortDate(board.weekEnd)}
           </p>
         </div>
         <Button onClick={() => setEditor({})}>
@@ -88,94 +130,106 @@ export default function KanbanPage() {
         </Button>
       </div>
 
+      {(error || actionError) && (
+        <p className="rounded-lg border border-red-400/40 px-3 py-2 text-sm text-red-400">
+          {actionError ?? error}
+        </p>
+      )}
+
       <KanbanFilters
-        mostrar={mostrar}
-        onMostrar={setMostrar}
-        contagens={{
-          atrasados: secoes.atrasados.length,
-          futuros: secoes.futuros.length,
-          finalizados: secoes.finalizados.length,
+        visibility={visibility}
+        onVisibility={setVisibility}
+        counts={{
+          overdue: board.overdue.length,
+          upcoming: board.upcoming.length,
+          done: board.done.length,
         }}
         tags={tags}
-        tagsSelecionadas={tagsSelecionadas}
-        onTags={setTagsSelecionadas}
+        selectedTagIds={activeTagIds}
+        onSelectTags={setSelectedTagIds}
+        onManageTags={() => setManagingTags(true)}
       />
 
       <DndContext
-        sensors={sensores}
-        onDragStart={aoComecar}
-        onDragEnd={aoSoltar}
-        onDragCancel={() => setArrastando(null)}
+        sensors={sensors}
+        onDragStart={onDragStart}
+        onDragEnd={onDragEnd}
+        onDragCancel={() => setDragging(null)}
       >
         <div className="grid items-start gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-          {dias.map((dia) => {
-            const chave = format(dia, "yyyy-MM-dd");
-            return (
-              <KanbanColumn
-                key={chave}
-                id={`dia:${chave}`}
-                titulo={format(dia, "EEEE", { locale: ptBR })}
-                subtitulo={format(dia, "d 'de' MMMM", { locale: ptBR })}
-                destaque={isSameDay(dia, now)}
-                soltavel
-                cards={secoes.dias[chave] ?? []}
-                vazio="Nenhum card neste dia."
-                onAdd={() => setEditor({ dataInicial: chave })}
-                {...colunaProps}
-              />
-            );
-          })}
-
-          {mostrar.atrasados && (
+          {board.days.map((day) => (
             <KanbanColumn
-              id="secao:atrasados"
-              titulo="Atrasados"
-              subtitulo="Não concluídos de semanas anteriores"
-              cards={secoes.atrasados}
-              vazio="Nada atrasado."
-              mostrarData
-              mostrarContagem
-              {...colunaProps}
+              key={day.date}
+              id={`day:${day.date}`}
+              title={format(parseISO(day.date), "EEEE", { locale: ptBR })}
+              subtitle={longDate(day.date)}
+              highlight={day.isToday}
+              droppable
+              items={day.cards}
+              emptyText="Nenhum card neste dia."
+              onAdd={() => setEditor({ initialDate: day.date })}
+              onOpen={openCard}
+            />
+          ))}
+
+          {visibility.overdue && (
+            <KanbanColumn
+              id="section:overdue"
+              title="Atrasados"
+              subtitle="Não concluídos de semanas anteriores"
+              items={board.overdue}
+              emptyText="Nada atrasado."
+              showDate
+              showCountdown
+              onOpen={openCard}
             />
           )}
 
-          {mostrar.futuros && (
+          {visibility.upcoming && (
             <KanbanColumn
-              id="secao:futuros"
-              titulo="Eventos futuros"
-              subtitulo="Depois desta semana"
-              cards={secoes.futuros}
-              vazio="Nenhum evento futuro."
-              mostrarData
-              mostrarContagem
-              {...colunaProps}
+              id="section:upcoming"
+              title="Eventos futuros"
+              subtitle="Depois desta semana"
+              items={board.upcoming}
+              emptyText="Nenhum evento futuro."
+              showDate
+              showCountdown
+              onOpen={openCard}
             />
           )}
 
-          {mostrar.finalizados && (
+          {visibility.done && (
             <KanbanColumn
-              id="secao:finalizados"
-              titulo="Finalizados"
-              subtitulo="Arraste um card para cá para concluir"
-              soltavel
-              cards={secoes.finalizados}
-              vazio="Nenhum card finalizado."
-              mostrarData
-              {...colunaProps}
+              id="section:done"
+              title="Finalizados"
+              subtitle="Arraste um card para cá para concluir"
+              droppable
+              items={board.done}
+              emptyText="Nenhum card finalizado."
+              showDate
+              onOpen={openCard}
             />
           )}
         </div>
 
-        <DragOverlay>
-          {arrastando && <CardItem card={arrastando} tags={tags} now={now} />}
-        </DragOverlay>
+        <DragOverlay>{dragging && <CardItem item={dragging} />}</DragOverlay>
       </DndContext>
 
       {editor && (
         <CardModal
           card={editor.card}
-          dataInicial={editor.dataInicial}
+          initialDate={editor.initialDate}
+          tags={tags}
           onClose={() => setEditor(null)}
+          onChanged={reloadAll}
+        />
+      )}
+
+      {managingTags && (
+        <TagManagerModal
+          tags={tags}
+          onClose={() => setManagingTags(false)}
+          onChanged={reloadAll}
         />
       )}
     </div>

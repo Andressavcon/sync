@@ -7,4 +7,10 @@ export default defineConfig({
   resolve: {
     alias: { "@": `${import.meta.dirname}/src` },
   },
+  server: {
+    // In development, requests to /api go to the Python backend
+    proxy: {
+      "/api": "http://localhost:8000",
+    },
+  },
 });

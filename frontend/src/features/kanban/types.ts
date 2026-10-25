@@ -1,30 +1,31 @@
-export type Status = "pendente" | "em_andamento" | "feito";
+import type { CardStatus, Frequency } from "@/data/repositories/kanbanRepository";
 
-export const STATUS_OPCOES: { valor: Status; rotulo: string }[] = [
-  { valor: "pendente", rotulo: "Pendente" },
-  { valor: "em_andamento", rotulo: "Em andamento" },
-  { valor: "feito", rotulo: "Feito" },
+/** Which sections outside the week are visible (section 4.2 filters) */
+export interface Visibility {
+  overdue: boolean;
+  upcoming: boolean;
+  done: boolean;
+}
+
+export const STATUS_OPTIONS: { value: CardStatus; label: string }[] = [
+  { value: "pending", label: "Pendente" },
+  { value: "in_progress", label: "Em andamento" },
+  { value: "done", label: "Feito" },
 ];
 
-export interface Tag {
-  id: string;
-  nome: string;
-}
+export const FREQUENCY_OPTIONS: { value: Frequency; label: string }[] = [
+  { value: "daily", label: "Todo dia" },
+  { value: "weekly", label: "Toda semana" },
+  { value: "monthly", label: "Todo mês" },
+];
 
-export interface KanbanCard {
-  id: string;
-  titulo: string;
-  tags: string[]; // ids de Tag
-  status: Status;
-  dataEntrega: string; // yyyy-MM-dd
-  horaEntrega: string; // HH:mm
-  conteudo: string; // texto livre (links etc.)
-  criadoEm: string; // ISO
-  concluidoEm?: string; // ISO
-}
+/** Index = backend weekday (Monday = 0) */
+export const WEEKDAY_LABELS = ["seg", "ter", "qua", "qui", "sex", "sáb", "dom"];
 
-export interface Mostrar {
-  finalizados: boolean;
-  atrasados: boolean;
-  futuros: boolean;
+/** Repeat settings while creating a recurring card */
+export interface RepeatSettings {
+  frequency: Frequency;
+  weekdays: number[];
+  monthDay: number;
+  endDate: string; // empty = repeats forever
 }

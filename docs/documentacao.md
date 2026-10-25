@@ -678,7 +678,7 @@ Os tokens do Tailwind seguem a tabela da seção 2.1, em `src/styles/index.css` 
 1. **[feito]** Shell, Configurações, componentes `ui/`.
 2. **[feito, parcial]** Kanban, Compras, Treinos e Finanças com dados locais.
 3. Camada de repositórios, tradução do código para inglês e correções.
-4. Ligar cada módulo à API, conforme o back fica pronto.
+4. Ligar cada módulo à API, conforme o back fica pronto. **[feito]** Kanban.
 5. Dashboard, Notificações, Login e PWA.
 
 ### 15.8 Esboço visual
@@ -687,7 +687,7 @@ Os tokens do Tailwind seguem a tabela da seção 2.1, em `src/styles/index.css` 
 
 ### 15.9 Pendências conhecidas (avaliação de 24/10/2026)
 
-- Kanban: recorrência (4.10), editar/excluir tags, lembrete de evento.
+- Kanban: ~~recorrência, editar/excluir tags~~ (feito, ligado à API); falta lembrete de evento (seção 6) e editar a regra de repetição pela tela (a API já tem `PATCH /api/recurrences/{id}`).
 - Treinos: adicionar/editar/excluir na biblioteca; cronômetro perde tempo quando o app fica em segundo plano (a próxima etapa começa na hora do "tick", e não no fim da anterior).
 - Compras: sugestão de itens frequentes, tela "Listas anteriores", ordem das categorias, gasto virar despesa em Finanças.
 - Finanças: receitas recorrentes; excluir pote devolve o valor ao disponível sem avisar; lançamentos com data futura somem da lista.

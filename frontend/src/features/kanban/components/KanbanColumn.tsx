@@ -1,20 +1,18 @@
-import { Plus } from "lucide-react";
 import { useDraggable, useDroppable } from "@dnd-kit/core";
+import { Plus } from "lucide-react";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
-import type { KanbanCard, Tag } from "../types";
+import type { BoardCard, Card } from "@/data/repositories/kanbanRepository";
 import CardItem from "./CardItem";
 
-interface CardProps {
-  tags: Tag[];
-  now: Date;
-  mostrarData?: boolean;
-  mostrarContagem?: boolean;
-  onAbrir: (card: KanbanCard) => void;
+interface ItemOptions {
+  showDate?: boolean;
+  showCountdown?: boolean;
+  onOpen: (card: Card) => void;
 }
 
-function CardArrastavel({ card, onAbrir, ...resto }: CardProps & { card: KanbanCard }) {
-  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({ id: card.id });
+function DraggableCard({ item, onOpen, ...options }: ItemOptions & { item: BoardCard }) {
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({ id: item.card.id });
   return (
     <div
       ref={setNodeRef}
@@ -22,69 +20,69 @@ function CardArrastavel({ card, onAbrir, ...resto }: CardProps & { card: KanbanC
       {...listeners}
       className={isDragging ? "opacity-40" : ""}
     >
-      <CardItem card={card} onClick={() => onAbrir(card)} {...resto} />
+      <CardItem item={item} onClick={() => onOpen(item.card)} {...options} />
     </div>
   );
 }
 
-interface Props extends CardProps {
-  /** id do droppable: "dia:yyyy-MM-dd" ou "secao:..." */
+interface Props extends ItemOptions {
+  /** Droppable id: "day:yyyy-MM-dd" or "section:..." */
   id: string;
-  titulo: string;
-  subtitulo?: string;
-  /** Destaca a coluna de hoje */
-  destaque?: boolean;
-  /** Aceita cards soltos nela (dias e Finalizados) */
-  soltavel?: boolean;
-  cards: KanbanCard[];
-  vazio: string;
+  title: string;
+  subtitle?: string;
+  /** Highlights today's column */
+  highlight?: boolean;
+  /** Accepts dropped cards (days and Done) */
+  droppable?: boolean;
+  items: BoardCard[];
+  emptyText: string;
   onAdd?: () => void;
 }
 
 export default function KanbanColumn({
   id,
-  titulo,
-  subtitulo,
-  destaque,
-  soltavel,
-  cards,
-  vazio,
+  title,
+  subtitle,
+  highlight,
+  droppable,
+  items,
+  emptyText,
   onAdd,
-  ...resto
+  ...options
 }: Props) {
-  const { setNodeRef, isOver } = useDroppable({ id, disabled: !soltavel });
+  const { setNodeRef, isOver } = useDroppable({ id, disabled: !droppable });
 
   return (
     <section
       ref={setNodeRef}
       className={[
         "min-h-40 rounded-xl border bg-surface p-4 transition-shadow",
-        destaque ? "border-primary" : "border-border",
+        highlight ? "border-primary" : "border-border",
         isOver ? "ring-2 ring-primary" : "",
       ].join(" ")}
     >
       <header className="mb-3 flex items-center gap-2">
         <div className="min-w-0 flex-1">
           <h2 className="flex items-center gap-2 text-lg font-semibold capitalize">
-            {titulo}
-            {destaque && <Badge variant="primary">Hoje</Badge>}
+            {title}
+            {highlight && <Badge variant="primary">Hoje</Badge>}
           </h2>
-          {subtitulo && <p className="text-xs text-muted">{subtitulo}</p>}
+          {subtitle && <p className="text-xs text-muted">{subtitle}</p>}
         </div>
-        <span className="text-sm text-muted">{cards.length}</span>
+        <span className="text-sm text-muted">{items.length}</span>
         {onAdd && (
-          <Button variant="ghost" size="icon" aria-label={`Adicionar card em ${titulo}`} onClick={onAdd}>
+          <Button variant="ghost" size="icon" aria-label={`Adicionar card em ${title}`} onClick={onAdd}>
             <Plus size={18} />
           </Button>
         )}
       </header>
 
-      {cards.length === 0 ? (
-        <p className="py-4 text-center text-sm text-muted">{vazio}</p>
+      {items.length === 0 ? (
+        <p className="py-4 text-center text-sm text-muted">{emptyText}</p>
       ) : (
         <div className="flex flex-col gap-2">
-          {cards.map((card) => (
-            <CardArrastavel key={card.id} card={card} {...resto} />
+          {items.map((item) => (
+            <DraggableCard key={item.card.id} item={item} {...options} />
           ))}
         </div>
       )}

@@ -1,24 +1,26 @@
 import type { ReactNode } from "react";
+import { Tags } from "lucide-react";
 import Button from "@/components/ui/Button";
-import type { Mostrar, Tag } from "../types";
+import type { Tag } from "@/data/repositories/kanbanRepository";
+import type { Visibility } from "../types";
 
 function Chip({
-  ativo,
+  active,
   onClick,
   children,
 }: {
-  ativo: boolean;
+  active: boolean;
   onClick: () => void;
   children: ReactNode;
 }) {
   return (
     <button
       type="button"
-      aria-pressed={ativo}
+      aria-pressed={active}
       onClick={onClick}
       className={[
         "rounded-full border px-3 py-1 text-sm transition-colors",
-        ativo
+        active
           ? "border-primary bg-primary text-bg"
           : "border-border text-muted hover:bg-surface-hover hover:text-text",
       ].join(" ")}
@@ -29,68 +31,63 @@ function Chip({
 }
 
 interface Props {
-  mostrar: Mostrar;
-  onMostrar: (m: Mostrar) => void;
-  contagens: Record<keyof Mostrar, number>;
+  visibility: Visibility;
+  onVisibility: (v: Visibility) => void;
+  counts: Record<keyof Visibility, number>;
   tags: Tag[];
-  tagsSelecionadas: string[];
-  onTags: (ids: string[]) => void;
+  selectedTagIds: string[];
+  onSelectTags: (ids: string[]) => void;
+  onManageTags: () => void;
 }
 
 export default function KanbanFilters({
-  mostrar,
-  onMostrar,
-  contagens,
+  visibility,
+  onVisibility,
+  counts,
   tags,
-  tagsSelecionadas,
-  onTags,
+  selectedTagIds,
+  onSelectTags,
+  onManageTags,
 }: Props) {
-  const alternarTag = (id: string) =>
-    onTags(
-      tagsSelecionadas.includes(id)
-        ? tagsSelecionadas.filter((t) => t !== id)
-        : [...tagsSelecionadas, id]
+  const toggle = (key: keyof Visibility) => onVisibility({ ...visibility, [key]: !visibility[key] });
+  const toggleTag = (id: string) =>
+    onSelectTags(
+      selectedTagIds.includes(id)
+        ? selectedTagIds.filter((t) => t !== id)
+        : [...selectedTagIds, id]
     );
 
   return (
     <div className="flex flex-col gap-3 rounded-xl border border-border bg-surface p-4">
       <div className="flex flex-wrap items-center gap-2">
         <span className="mr-1 text-sm text-muted">Mostrar:</span>
-        <Chip
-          ativo={mostrar.atrasados}
-          onClick={() => onMostrar({ ...mostrar, atrasados: !mostrar.atrasados })}
-        >
-          Atrasados ({contagens.atrasados})
+        <Chip active={visibility.overdue} onClick={() => toggle("overdue")}>
+          Atrasados ({counts.overdue})
         </Chip>
-        <Chip
-          ativo={mostrar.futuros}
-          onClick={() => onMostrar({ ...mostrar, futuros: !mostrar.futuros })}
-        >
-          Eventos futuros ({contagens.futuros})
+        <Chip active={visibility.upcoming} onClick={() => toggle("upcoming")}>
+          Eventos futuros ({counts.upcoming})
         </Chip>
-        <Chip
-          ativo={mostrar.finalizados}
-          onClick={() => onMostrar({ ...mostrar, finalizados: !mostrar.finalizados })}
-        >
-          Finalizados ({contagens.finalizados})
+        <Chip active={visibility.done} onClick={() => toggle("done")}>
+          Finalizados ({counts.done})
         </Chip>
       </div>
 
-      {tags.length > 0 && (
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="mr-1 text-sm text-muted">Tags:</span>
-          {tags.map((t) => (
-            <Chip key={t.id} ativo={tagsSelecionadas.includes(t.id)} onClick={() => alternarTag(t.id)}>
-              {t.nome}
-            </Chip>
-          ))}
-          {tagsSelecionadas.length > 0 && (
-            <Button variant="ghost" onClick={() => onTags([])}>
-              Limpar
-            </Button>
-          )}
-        </div>
-      )}
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="mr-1 text-sm text-muted">Tags:</span>
+        {tags.map((tag) => (
+          <Chip key={tag.id} active={selectedTagIds.includes(tag.id)} onClick={() => toggleTag(tag.id)}>
+            {tag.name}
+          </Chip>
+        ))}
+        {selectedTagIds.length > 0 && (
+          <Button variant="ghost" onClick={() => onSelectTags([])}>
+            Limpar
+          </Button>
+        )}
+        <Button variant="ghost" className="ml-auto" onClick={onManageTags}>
+          <Tags size={16} /> Gerenciar tags
+        </Button>
+      </div>
     </div>
   );
 }
