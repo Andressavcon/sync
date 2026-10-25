@@ -51,18 +51,20 @@ Módulos previstos: Dashboard, Kanban (tarefas e eventos), Treinos, Lista de com
 
 ## 3. Módulos e andamento
 
-| Módulo | Situação |
-|---|---|
-| Kanban (tarefas + eventos futuros) | definido (seção 4) |
-| Dashboard | definido (seção 5) |
-| Notificações | em definição (seção 6) |
-| Treinos | definido (seção 7) |
-| Lista de compras | definido (seção 8) |
-| Finanças | definido (seção 9) |
-| Configurações | definido (seção 10) |
-| Login | definido (seção 11) |
-| Front-end (stack e estrutura) | definido (seção 15) |
-| Back-end (stack e estrutura) | definido (seção 16) |
+| Módulo | Documentação | Construção (back + front) |
+|---|---|---|
+| Kanban (tarefas + eventos futuros) | definido (seção 4) | pronto |
+| Dashboard | definido (seção 5) | pronto |
+| Notificações | definido (seção 6) | pronto |
+| Treinos | definido (seção 7) | pronto |
+| Lista de compras | definido (seção 8) | pronto (offline) |
+| Finanças | definido (seção 9) | pronto (falta receita recorrente, 9.4) |
+| Configurações | definido (seção 10) | pronto |
+| Login | definido (seção 11) | pronto; precisa configurar o Supabase |
+| PWA (instalável, abre offline) | definido (seções 12 e 15.6) | pronto |
+| Front-end (stack e estrutura) | definido (seção 15) | — |
+| Back-end (stack e estrutura) | definido (seção 16) | — |
+| Deploy e CI | sugestão (seção 12) | a fazer |
 
 ---
 
@@ -240,8 +242,10 @@ Tela inicial.
 - **[definido]** Somente dentro do app.
 - **[definido]** Cada evento tem um botão para ativar aviso: "avisar quando faltar X dias" ou "avisar no dia".
 - **[definido]** Ícone de notificações no header; ao clicar, abre a lista.
-- **[sugestão]** Espaço de notificações no Dashboard (opcional).
-- **[sugestão]** O app verifica os lembretes ao ser aberto e mostra um indicador de não lidas no ícone.
+- **[definido]** Sem espaço extra no Dashboard: as notificações ficam no sino do header.
+- **[definido]** O app verifica os lembretes ao abrir, a cada 5 minutos e ao voltar para o app, e mostra a quantidade de não lidas no sino.
+- **[definido]** Opções de lembrete no card: no dia, 1, 2 ou 3 dias antes, 1 ou 2 semanas antes, 1 mês antes. A mensagem mostra a contagem ("faltam 3 dias", "é hoje").
+- **[definido]** Card concluído não gera lembrete. Mudar a data do card gera um lembrete novo para a nova data.
 
 Fluxo:
 1. No card do evento, ativar o lembrete e escolher quando avisar.
@@ -511,8 +515,16 @@ Autenticação simples hoje, mas já pensada para permitir compartilhar o app co
 
 - **[definido]** Login com Google, sem cadastro de senha própria.
 - **[definido]** Todo dado (card, tag, lançamento, treino, item de lista) já nasce vinculado ao usuário dono, mesmo com um usuário só hoje — é o que já aparece no rascunho de modelo de dados do Kanban (seção 4.7).
-- **[sugestão]** Usar Supabase Auth para o login com Google: ele cuida do fluxo OAuth e entrega um token (JWT) que o back-end (FastAPI) só precisa validar, sem implementar OAuth na mão. Faz sentido em conjunto com a seção 12, caso o banco também fique no Supabase.
-- **[sugestão]** Enquanto for só você usando, não existe convite nem permissão — é só a conta logada. Quando entrar compartilhamento (backlog), aí sim definir se é por e-mail convidado, código de convite, etc.
+- **[definido]** Supabase Auth para o login com Google: ele cuida do fluxo OAuth e entrega um token (JWT) que o back-end só valida com as chaves públicas do projeto (JWKS).
+- **[definido]** Sem o Supabase configurado, o app roda sem login com um usuário de desenvolvimento (bom para programar e testar).
+- **[definido]** O primeiro login cria o usuário; cada pessoa só enxerga os próprios dados.
+- **[definido]** Ao sair, as cópias offline do aparelho (lista, treino do dia, preferências) são apagadas.
+- **[definido]** Enquanto for só você usando, não existe convite nem permissão. O compartilhamento fica no backlog.
+
+Para ligar o login (quando for publicar):
+1. Criar um projeto no Supabase e ativar o provedor Google (Authentication > Providers), com o Client ID do Google Cloud.
+2. Back: `SUPABASE_URL=https://<projeto>.supabase.co` no `backend/.env`.
+3. Front: `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY` no `frontend/.env.local`.
 
 ### 11.3 Decisões em aberto
 
@@ -526,7 +538,7 @@ Sem decisões em aberto no módulo Login, além do que já está no Backlog (com
 - **Back-end (Python/FastAPI):** Render, no free tier de web service (suporta Python e Docker). Ele "dorme" depois de um tempo sem uso e demora alguns segundos para acordar na primeira requisição — tranquilo para um app pessoal de baixo tráfego.
 - **Banco de dados:** Supabase (Postgres), em vez do Postgres gratuito do próprio Render — o do Render expira depois de 90 dias, o do Supabase não tem esse prazo. Como bônus, o Supabase também resolve o login (seção 11.2).
 - **PWA:** HTTPS (incluso nas hospedagens acima), arquivo de manifesto do app e service worker (cache/offline).
-- **[definido]** Offline na versão mais simples: o app (telas) abre sem internet pelo cache do service worker, e só a **lista de compras** guarda os dados localmente para funcionar sem internet (seção 8.3). Os outros módulos precisam de conexão. Sincronização offline completa fica para o backlog.
+- **[definido]** Offline na versão mais simples: o app (telas) abre sem internet pelo cache do service worker. A **lista de compras** (seção 8.3) e o **treino do dia** (cronômetro e marcações) guardam os dados no aparelho e enviam o que foi feito quando a internet volta. Os outros módulos precisam de conexão. Sincronização offline completa fica para o backlog.
 - **Backup:** exportação periódica do banco (Supabase permite dump manual do Postgres); frequência ainda a definir — mensal deve bastar para um app pessoal.
 
 ### 12.1 Decisões em aberto
@@ -595,6 +607,14 @@ Sem decisões em aberto no módulo Login, além do que já está no Backlog (com
 - Projeto organizado em monorepo: `frontend/`, `backend/`, `docs/`.
 - Todo o código em inglês; interface e documentação em português. Mensagens de commit também em inglês.
 - Finanças: salário é cadastro separado (valor + dia); compra no dia do fechamento é ajustável por cartão (padrão: fatura seguinte); pote com dinheiro só é excluído depois de retirar o valor.
+- Recorrência do Kanban: ocorrências criadas ao abrir o quadro (semana atual + só a próxima); mensal no dia 31 cai no último dia do mês; "esta e as próximas" vale para as não concluídas.
+- Lista de compras: categorias padrão criadas uma única vez; sugestões pelos itens mais frequentes; offline dos checks com fila de envio.
+- Treinos: biblioteca editável no app; o cronômetro conta pelo fim real de cada etapa (corrige o tempo perdido em segundo plano); progresso salvo no servidor com cópia local.
+- Finanças: dinheiro em Decimal; a fatura é calculada pelos lançamentos e só o fechamento conferido e o "paga" são guardados; o disponível da semana usa o valor do início da semana como 100% no Dashboard.
+- Notificações: lembrete por card (no dia ou N dias antes), só no sino do app.
+- Configurações (dia do lembrete de contas, meta de treinos) salvas no servidor.
+- Login com Google pelo Supabase Auth; sem configurar, o app roda com usuário de desenvolvimento.
+- PWA instalável; páginas carregadas sob demanda.
 
 ---
 
@@ -618,8 +638,10 @@ O front fica em `frontend/`. Ele não acessa o banco diretamente: conversa com o
 | Estado de tela / preferências | zustand |
 | PWA e cache offline | vite-plugin-pwa |
 | Gráficos | recharts |
+| Login com Google | @supabase/supabase-js |
 
-- **[definido]** Sem Dexie: os dados vêm da API. Enquanto a API de um módulo não existe, o repositório desse módulo usa uma implementação local temporária (localStorage), com a mesma interface.
+- **[definido]** Sem Dexie: os dados vêm da API. As únicas cópias locais são as do offline (lista de compras e treino do dia) e o cache das preferências.
+- **[em aberto]** `react-hook-form`, `zod`, `recharts`, `@dnd-kit/sortable` e `@dnd-kit/utilities` estão instalados mas ainda não são usados (os formulários usam estado simples). Decidir na estilização final: usar ou remover.
 
 ### 15.2 Como rodar
 
@@ -639,19 +661,19 @@ frontend/src/
 ├─ components/
 │  ├─ ui/                   # Button, Input, Badge, Card, Modal, Checkbox...
 │  └─ layout/               # Sidebar, Header, AppShell, NotificationBell
-├─ features/                # um módulo = uma pasta
+├─ features/                # um módulo = uma pasta (components/, hooks/, utils/)
 │  ├─ dashboard/
-│  ├─ kanban/               # components/, hooks/, utils/, types.ts
+│  ├─ kanban/
 │  ├─ workouts/             # (treinos)
 │  ├─ shopping/             # (compras)
 │  ├─ finance/              # (finanças)
-│  ├─ notifications/
 │  ├─ settings/             # (configurações)
-│  └─ auth/
+│  └─ auth/                 # tela de login
 ├─ data/
 │  ├─ api.ts                # cliente HTTP (fetch + token do login)
-│  └─ repositories/         # cardRepository, tagRepository... (local → API)
-├─ hooks/                   # useModules, useWakeLock, useNow
+│  ├─ auth.ts               # Supabase Auth (login com Google)
+│  └─ repositories/         # um por módulo: kanban, shopping, workouts, finance...
+├─ hooks/                   # useApiData, useModules, useSettings, useWakeLock, useNow
 ├─ lib/                     # datas, moeda (BRL), ids
 ├─ styles/index.css         # Tailwind + tokens
 └─ main.tsx
@@ -659,7 +681,9 @@ frontend/src/
 
 - **[definido]** Uma feature **não importa de outra feature**. O que é compartilhado vai para `components/`, `lib/`, `hooks/` ou `data/`.
 - **[definido]** Exceção: o Dashboard apenas **lê** dados de outros módulos, via repositories.
-- **[definido]** Nomes de pastas, arquivos e código em inglês (as pastas `treinos/`, `compras/`, `financas/`, `configuracoes/` atuais serão renomeadas na refatoração de cada módulo).
+- **[definido]** Nomes de pastas, arquivos e código em inglês. As URLs ficam em português (`/compras`, `/treinos`), porque o usuário as vê.
+- **[definido]** As notificações ficam no sino do layout (`components/layout/NotificationBell.tsx`).
+- **[definido]** Cada página é carregada sob demanda (lazy loading), para o primeiro carregamento ser menor.
 
 ### 15.4 Tokens da paleta
 
@@ -673,30 +697,30 @@ Os tokens do Tailwind seguem a tabela da seção 2.1, em `src/styles/index.css` 
 
 ### 15.6 PWA
 
-- **[em aberto]** Configurar o `vite-plugin-pwa` (manifesto, ícones `icon-192.png` e `icon-512.png`, service worker).
-- **[definido]** Offline simples (seção 12): telas em cache e só a lista de compras com dados locais.
+- **[definido]** `vite-plugin-pwa`: manifesto (nome, cores, ícones 192/512/maskable e Apple), service worker que guarda as telas e atualiza sozinho quando há versão nova. As chamadas `/api` nunca passam por esse cache.
+- **[definido]** Offline simples (seção 12): telas em cache; lista de compras e treino do dia com dados locais.
 
 ### 15.7 Ordem de construção
 
 1. **[feito]** Shell, Configurações, componentes `ui/`.
-2. **[feito, parcial]** Kanban, Compras, Treinos e Finanças com dados locais.
-3. Camada de repositórios, tradução do código para inglês e correções.
-4. Ligar cada módulo à API, conforme o back fica pronto. **[feito]** Kanban, Lista de compras, Treinos.
-5. Dashboard, Notificações, Login e PWA.
+2. **[feito]** Kanban, Compras, Treinos e Finanças com dados locais (v0).
+3. **[feito]** Camada de repositórios, tradução do código para inglês e correções.
+4. **[feito]** Todos os módulos ligados à API.
+5. **[feito]** Dashboard, Notificações, Login e PWA.
 6. **Estilização final**: etapa dedicada ao visual (tipografia, espaçamentos, animações, mobile), aplicada nos tokens e nos componentes `ui/`. Até lá, toda tela usa só os componentes compartilhados.
 
 ### 15.8 Esboço visual
 
 - **[definido]** O esboço de telas é apenas **referência de estilo**. Quando houver conflito com esta documentação, a documentação vale.
 
-### 15.9 Pendências conhecidas (avaliação de 24/10/2026)
+### 15.9 Pendências conhecidas (atualizado em 24/10/2026)
 
-- Kanban: ~~recorrência, editar/excluir tags~~ (feito, ligado à API); falta lembrete de evento (seção 6) e editar a regra de repetição pela tela (a API já tem `PATCH /api/recurrences/{id}`).
-- Treinos: ~~biblioteca editável, bug do cronômetro em segundo plano~~ (feito, ligado à API; a próxima etapa começa quando a anterior terminou de verdade). Falta o resumo no Dashboard.
-- Compras: ~~sugestões, "Listas anteriores", ordem das categorias, offline dos checks~~ (feito, ligado à API); falta o gasto virar despesa em Finanças e o app **abrir** sem internet (depende do service worker do PWA).
-- Finanças: receitas recorrentes; excluir pote devolve o valor ao disponível sem avisar; lançamentos com data futura somem da lista.
-- Dashboard, Notificações, Login e PWA ainda não existem.
-- Nenhum registro tem o campo de usuário dono (resolvido quando os dados passarem a vir do back).
+- Finanças: **receitas recorrentes** (9.4) ainda não existem; o salário é um cadastro à parte (9.7).
+- Kanban: editar a regra de repetição pela tela (a API já tem `PATCH /api/recurrences/{id}`); hoje dá para criar, editar "esta e as próximas" e parar de repetir.
+- Login: pronto e testado com tokens locais, mas o login real com Google só funciona depois de configurar um projeto Supabase (seção 11.2).
+- Front: sem testes automáticos ainda (sugestão: Vitest para `timer.ts`, `listOps.ts` e afins).
+- Deploy (seção 12) e CI (GitHub Actions) ainda não feitos.
+- Estilização final (15.7, passo 6).
 
 ---
 
@@ -721,7 +745,7 @@ O back fica em `backend/`. Ele guarda os dados, valida o login e concentra as re
 | Lint e formatação | Ruff | Checkstyle / Spotless |
 | Configuração (.env) | pydantic-settings | `application.properties` |
 
-### 16.2 Estrutura de pastas (proposta)
+### 16.2 Estrutura de pastas
 
 ```
 backend/
@@ -736,32 +760,41 @@ backend/
 │  │  ├─ database.py        # conexão e sessão do banco
 │  │  └─ security.py        # validação do token do login
 │  └─ modules/              # um módulo = uma pasta, como no front
-│     └─ kanban/
+│     ├─ users/             # só a tabela de usuários
+│     ├─ kanban/            # + board.py (seções da semana) e recurrence.py (datas)
+│     ├─ shopping/
+│     ├─ workouts/
+│     ├─ finance/           # + invoices.py (faturas), available.py (disponível)
+│     ├─ settings/
+│     ├─ notifications/     # + rules.py (quando avisar)
+│     └─ dashboard/         # só lê os outros módulos
 │        ├─ models.py       # tabelas (≈ @Entity)
 │        ├─ schemas.py      # formato de entrada/saída da API (≈ DTO)
 │        ├─ repository.py   # consultas ao banco (≈ Repository)
 │        ├─ service.py      # regras de negócio (≈ @Service)
 │        └─ router.py       # endpoints (≈ @RestController)
-└─ tests/
-   └─ kanban/
+└─ tests/                   # uma pasta por módulo; as regras puras são testadas sem banco
 ```
 
 ### 16.3 Convenções
 
 - **[definido]** Código em inglês. No Python, `snake_case` para variáveis e funções e `PascalCase` para classes.
-- **[sugestão]** O JSON da API usa `camelCase` (como o TypeScript do front); o Pydantic converte para `snake_case` no Python automaticamente.
-- **[sugestão]** Rotas REST no plural e em inglês: `/api/cards`, `/api/tags`, `/api/workouts`, `/api/shopping-items`, `/api/transactions`...
+- **[definido]** O JSON da API usa `camelCase` (como o TypeScript do front); o Pydantic converte para `snake_case` no Python automaticamente.
+- **[definido]** Rotas REST em inglês, agrupadas por módulo: `/api/cards`, `/api/kanban/board`, `/api/shopping/...`, `/api/workouts/...`, `/api/finance/...`, `/api/dashboard`. A lista completa fica em `/docs`.
+- **[definido]** Dinheiro sempre em `Decimal` (≈ `BigDecimal`), nunca `float`.
+- **[definido]** Regras de negócio em funções puras (sem banco), testadas à parte: `board.py`, `recurrence.py`, `invoices.py`, `available.py`, `notifications/rules.py`.
+- **[definido]** Datas "de calendário" (dia de entrega, dia do treino) sem fuso; momentos exatos (criado, concluído, pago) em UTC. O "hoje" usa o fuso `America/Sao_Paulo`.
 - **[definido]** Toda tabela tem `user_id` (seção 11.2), e toda consulta filtra pelo usuário logado.
-- **[sugestão]** IDs em UUID; datas e horas guardadas em UTC.
+- **[definido]** IDs em UUID.
 
 ### 16.4 Autenticação
 
-- **[sugestão]** O front faz o login com Google pelo Supabase Auth e envia o token em cada requisição (`Authorization: Bearer ...`). O back só valida o token e descobre o usuário. Em desenvolvimento, um usuário fixo de teste.
+- **[definido]** O front faz o login com Google pelo Supabase Auth e envia o token em cada requisição (`Authorization: Bearer ...`). O back só valida o token (JWKS do Supabase) e descobre o usuário. Sem `SUPABASE_URL`, usa um usuário fixo de desenvolvimento. Sem token válido: 401.
 
 ### 16.5 Ordem de construção
 
-1. Esqueleto: projeto, configuração, banco, rota de saúde (`/health`) e a documentação automática da API (`/docs`).
-2. **Kanban**: tags e cards (CRUD), cálculo das seções da semana, depois recorrência.
-3. Compras, Treinos e Finanças, um por vez, cada um com testes.
-4. Login real, Notificações e Dashboard (que só lê dados dos outros módulos).
+1. **[feito]** Esqueleto: projeto, configuração, banco, rota de saúde (`/health`) e a documentação automática da API (`/docs`).
+2. **[feito]** **Kanban**: tags e cards (CRUD), cálculo das seções da semana, recorrência.
+3. **[feito]** Compras, Treinos e Finanças, um por vez, cada um com testes.
+4. **[feito]** Login, Configurações, Notificações e Dashboard (que só lê dados dos outros módulos).
 5. Deploy (Render + Supabase) e CI (GitHub Actions rodando lint e testes).
