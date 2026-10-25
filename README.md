@@ -4,7 +4,9 @@ A personal app to organize everyday life in one place: weekly tasks (Kanban), wo
 
 It works on phone, tablet and desktop, can be installed as an app (PWA), and parts of it work offline.
 
-To try it, clone the repository and run it locally (see [Running locally](#running-locally)). With no configuration it starts without login, using a development user and a local SQLite database.
+**Live demo:** [sync-demo-chi.vercel.app](https://sync-demo-chi.vercel.app), with no login and fictional data. It runs on a free server, so the first visit can take about a minute to wake up, and the data resets after a period without use.
+
+To run it on your machine, clone the repository (see [Running locally](#running-locally)). With no configuration it starts without login, using a development user and a local SQLite database.
 
 > The backend was my first Python project. I come from Java, so the code has comments comparing both worlds (FastAPI ≈ Spring Web, SQLAlchemy ≈ JPA, Alembic ≈ Flyway).
 
