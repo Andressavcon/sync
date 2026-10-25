@@ -10,7 +10,7 @@ import { formatBRL, parseBRL } from "@/lib/format";
 import { fieldClass } from "@/lib/ui";
 
 /**
- * Registers the market total as an expense in Finance (section 8.4): only the total,
+ * Registers the market total as an expense in Finance: only the total,
  * no value per item. On a card it goes into the invoice suggested by the date.
  * Registering doesn't clear or complete the list.
  */

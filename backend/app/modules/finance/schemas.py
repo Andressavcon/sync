@@ -50,7 +50,7 @@ class CurrentInvoice(ApiModel):
     month: str
     due_date: date
     total: Amount
-    # Alert: the closing date of this month wasn't checked yet (section 9.2)
+    # Alert: the closing date of this month wasn't checked yet
     needs_check: bool
 
 
@@ -77,7 +77,7 @@ class TransactionCreate(ApiModel):
 
 
 class InstallmentCreate(ApiModel):
-    """Installment purchase: the value of ONE installment and how many (section 9.2)."""
+    """Installment purchase: the value of ONE installment and how many."""
 
     title: Title
     installment_amount: Money
@@ -125,7 +125,7 @@ class InvoiceRead(ApiModel):
     paid: bool
     paid_at: datetime | None
     total: Amount
-    # Installments detailed per purchase: "TV — 3/10" (section 9.4)
+    # Installments detailed per purchase: "TV — 3/10"
     transactions: list[TransactionRead]
 
 
@@ -137,7 +137,7 @@ class InvoicePaid(ApiModel):
     paid: bool
 
 
-# ---------- Fixed bills (section 9.5) ----------
+# ---------- Fixed bills ----------
 
 
 class FixedBillCreate(ApiModel):
@@ -181,7 +181,7 @@ class FixedBillsMonth(ApiModel):
     pending_total: Amount
 
 
-# ---------- Savings pots (section 9.5) ----------
+# ---------- Savings pots ----------
 
 
 class PotCreate(ApiModel):
@@ -213,7 +213,7 @@ class PotsRead(ApiModel):
     total: Amount
 
 
-# ---------- Salary and overview (section 9.6) ----------
+# ---------- Salary and overview ----------
 
 
 class SalaryUpdate(ApiModel):

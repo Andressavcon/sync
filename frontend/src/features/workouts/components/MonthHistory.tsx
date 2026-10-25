@@ -27,7 +27,7 @@ interface Props {
   refreshKey: number;
 }
 
-/** Month calendar: only for reference, no editing of past days (section 7.2). */
+/** Month calendar: only for reference, no editing of past days. */
 export default function MonthHistory({ refreshKey }: Props) {
   const weeklyGoal = useSettings((s) => s.weeklyWorkoutGoal);
   const [month, setMonth] = useState(() => startOfMonth(new Date()));

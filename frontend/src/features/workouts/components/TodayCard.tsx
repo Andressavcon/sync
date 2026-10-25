@@ -13,7 +13,7 @@ interface Props {
   onRemove: (block: Block) => void;
 }
 
-/** Today's workout is built by dropping library blocks here (section 7.2). */
+/** Today's workout is built by dropping library blocks here. */
 export default function TodayCard({ day, onStart, onToggleDone, onRemove }: Props) {
   const { setNodeRef, isOver } = useDroppable({ id: TODAY_DROP_ID });
   const { blocks } = day;

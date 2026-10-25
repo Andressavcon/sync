@@ -11,7 +11,7 @@ Name = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max
 RestSec = Annotated[int, Field(ge=0, le=3600)]
 
 
-# ---------- Steps (section 7.3): three kinds that can be mixed in one block ----------
+# ---------- Steps: three kinds that can be mixed in one block ----------
 
 
 class TimeStep(ApiModel):
@@ -132,13 +132,13 @@ class BlockRead(ApiModel):
 class DayRead(ApiModel):
     day: date
     blocks: list[BlockRead]
-    # Section 7.5: the day is done when every block is done (and there is at least one)
+    # The day is done when every block is done (and there is at least one)
     completed: bool
-    # Past days are only for reference (section 7.2)
+    # Past days are only for reference
     read_only: bool
 
 
-# ---------- Month history (section 7.2) ----------
+# ---------- Month history ----------
 
 
 class HistoryBlock(ApiModel):

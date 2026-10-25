@@ -1,4 +1,4 @@
-"""Fixed bills, savings pots, salary and the money available to spend (sections 9.2 to 9.6)."""
+"""Fixed bills, savings pots, salary and the money available to spend."""
 
 import uuid
 from datetime import date, datetime, timedelta
@@ -153,7 +153,7 @@ class BudgetService:
         return pot
 
     def delete_pot(self, user_id: uuid.UUID, pot_id: uuid.UUID) -> None:
-        """Only empty pots: the money has to be withdrawn first (section 9.7)."""
+        """Only empty pots: the money has to be withdrawn first."""
         pot = self._get_pot(user_id, pot_id)
         if pot.balance > 0:
             raise InvalidDataError("Withdraw the money before deleting the pot")
@@ -238,7 +238,7 @@ class BudgetService:
         )
 
     def week_spending(self, user_id: uuid.UUID, today: date) -> WeekSpending:
-        """How much of this week's money was used (section 9.6).
+        """How much of this week's money was used.
 
         100% is the week's available amount AT THE START of the week, so it doesn't move
         with every purchase. Used = available then - available now (purchases, pix,

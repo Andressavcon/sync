@@ -24,7 +24,7 @@ interface Props {
   block: Block;
   /** Saves where the timer is (the page sends it to the API or the offline queue) */
   onProgress: (progress: BlockProgress) => void;
-  /** Last step finished: the block is done (section 7.4) */
+  /** Last step finished: the block is done */
   onFinish: () => void;
   onClose: () => void;
 }
@@ -74,7 +74,7 @@ function Timer({ block, steps, onProgress, onFinish, onClose }: Props & { steps:
     return () => clearTimeout(id);
   }, [state.finished]);
 
-  /** Closing in the middle keeps the progress, including the time left (section 7.4) */
+  /** Closing in the middle keeps the progress, including the time left */
   function close() {
     if (!state.finished) {
       const step = steps[state.index];

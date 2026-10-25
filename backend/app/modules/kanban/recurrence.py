@@ -1,4 +1,4 @@
-"""Which dates a recurrence rule falls on (section 4.10). Pure functions, no database."""
+"""Which dates a recurrence rule falls on. Pure functions, no database."""
 
 import calendar
 from datetime import date, timedelta

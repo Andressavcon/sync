@@ -1,4 +1,4 @@
-"""When a card reminder is due (section 6). Pure functions, no database."""
+"""When a card reminder is due. Pure functions, no database."""
 
 from datetime import date, timedelta
 

@@ -29,7 +29,7 @@ def _enum_column(enum_class: type[StrEnum]) -> Enum:
 
 
 class CreditCard(IdMixin, CreatedAtMixin, Base):
-    """Nubank, Banco do Brasil... (section 9.2)."""
+    """Nubank, Banco do Brasil..."""
 
     __tablename__ = "credit_cards"
 
@@ -65,7 +65,7 @@ class Invoice(IdMixin, Base):
 
 
 class Transaction(IdMixin, CreatedAtMixin, Base):
-    """An income or an expense (section 9.3)."""
+    """An income or an expense."""
 
     __tablename__ = "transactions"
 
@@ -74,7 +74,7 @@ class Transaction(IdMixin, CreatedAtMixin, Base):
     )
     kind: Mapped[TransactionKind] = mapped_column(_enum_column(TransactionKind))
     title: Mapped[str] = mapped_column(String(100))
-    # In an installment purchase, this is the value of ONE installment (section 9.2)
+    # In an installment purchase, this is the value of ONE installment
     amount: Mapped[Decimal] = mapped_column(MONEY)
     # "day", not "date": a field named date would hide the date type inside the class
     day: Mapped[date] = mapped_column(index=True)
@@ -89,11 +89,11 @@ class Transaction(IdMixin, CreatedAtMixin, Base):
     installment_number: Mapped[int | None]
     installment_total: Mapped[int | None]
 
-    # Extra income: counts in the money available to spend or not (section 9.6)
+    # Extra income: counts in the money available to spend or not
     count_in_available: Mapped[bool] = mapped_column(default=False)
 
 
-# ---------- Fixed monthly bills (section 9.2) ----------
+# ---------- Fixed monthly bills ----------
 
 
 class FixedBill(IdMixin, CreatedAtMixin, Base):
@@ -124,7 +124,7 @@ class FixedBillMonth(IdMixin, Base):
     paid_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
 
-# ---------- Savings pots (section 9.2) ----------
+# ---------- Savings pots ----------
 
 
 class MovementKind(StrEnum):
@@ -163,11 +163,11 @@ class PotMovement(IdMixin, CreatedAtMixin, Base):
     day: Mapped[date] = mapped_column(index=True)
 
 
-# ---------- Salary (section 9.6) ----------
+# ---------- Salary ----------
 
 
 class Salary(Base):
-    """Value and day it arrives: the cycle goes from one salary to the next (section 9.7)."""
+    """Value and day it arrives: the cycle goes from one salary to the next."""
 
     __tablename__ = "salaries"
 

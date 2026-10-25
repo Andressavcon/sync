@@ -63,7 +63,7 @@ class ItemRead(ApiModel):
     purchased: bool
 
 
-# ---------- The active list, ready to show (section 8.2) ----------
+# ---------- The active list, ready to show ----------
 
 
 class CategoryWithItems(ApiModel):
@@ -78,7 +78,7 @@ class ShoppingListRead(ApiModel):
     purchased_items: int
 
 
-# ---------- Archived lists (section 8.5) ----------
+# ---------- Archived lists ----------
 
 
 class ArchivedItemRead(ApiModel):

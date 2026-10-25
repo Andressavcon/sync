@@ -1,4 +1,4 @@
-"""Unit tests of the recurrence date rules (section 4.10). No database."""
+"""Unit tests of the recurrence date rules. No database."""
 
 from dataclasses import dataclass, field
 from datetime import date

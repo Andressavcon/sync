@@ -9,7 +9,7 @@ from app.core.models import CreatedAtMixin, IdMixin
 
 
 class Notification(IdMixin, CreatedAtMixin, Base):
-    """In-app only (section 6): shown in the header bell until marked as read."""
+    """In-app only: shown in the header bell until marked as read."""
 
     __tablename__ = "notifications"
     # One per card and due date: moving the card to another date creates a new one

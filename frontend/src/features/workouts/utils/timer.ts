@@ -3,7 +3,7 @@ import { isTimed, type TimerStep } from "./timerSteps";
 /**
  * Timer state machine (pure function, no React).
  * Time is computed from the END time of each step, not by counting seconds, so it stays
- * right with the screen locked or the app in the background (section 7.4).
+ * right with the screen locked or the app in the background.
  */
 export interface TimerState {
   index: number;

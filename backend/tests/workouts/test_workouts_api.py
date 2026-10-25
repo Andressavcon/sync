@@ -1,4 +1,4 @@
-"""Workouts API (section 7). Fixed clock: Wednesday 28 Oct 2026."""
+"""Workouts API. Fixed clock: Wednesday 28 Oct 2026."""
 
 from datetime import datetime
 
@@ -210,7 +210,7 @@ def test_unknown_source_is_404(client: TestClient):
     assert response.status_code == 404
 
 
-# ---------- Past days are read-only (section 7.2) ----------
+# ---------- Past days are read-only ----------
 
 
 def test_past_days_are_read_only(client: TestClient):

@@ -40,7 +40,7 @@ def to_json(steps: Sequence[BaseModel]) -> Steps:
 
 
 def is_day_completed(blocks: Sequence[WorkoutBlock]) -> bool:
-    """Section 7.5: done when every block is done (a day with no blocks is not a workout)."""
+    """Done when every block is done (a day with no blocks is not a workout)."""
     return bool(blocks) and all(b.state == BlockState.DONE for b in blocks)
 
 
@@ -148,7 +148,7 @@ class WorkoutService:
     def add_block(
         self, user_id: uuid.UUID, day: date, data: BlockCreate, today: date
     ) -> WorkoutBlock:
-        """Puts a library item on a day, copying its steps (section 7.2)."""
+        """Puts a library item on a day, copying its steps."""
         self._ensure_editable(day, today)
         if data.source_type == SourceType.SESSION:
             session = self._get_session(user_id, data.source_id)

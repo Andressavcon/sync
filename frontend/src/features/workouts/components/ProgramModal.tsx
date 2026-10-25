@@ -60,7 +60,7 @@ function SessionEditor({
   );
 }
 
-/** Create a program, or edit its name and its numbered sessions (section 7.2). */
+/** Create a program, or edit its name and its numbered sessions. */
 export default function ProgramModal({ program, onClose, onChange }: Props) {
   const [name, setName] = useState(program?.name ?? "");
   const [sessionCount, setSessionCount] = useState(21);

@@ -27,7 +27,7 @@ interface Props {
   onChange: (action: () => Promise<unknown>) => Promise<boolean>;
 }
 
-/** Money available to spend (section 9.6) and the month summary. */
+/** Money available to spend and the month summary. */
 export default function Overview({ version, onChange }: Props) {
   const month = currentMonth();
   const available = useApiData(`available:${version}`, financeRepository.getAvailable);

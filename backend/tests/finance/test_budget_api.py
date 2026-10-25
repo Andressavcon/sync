@@ -76,7 +76,7 @@ def test_edit_this_months_value_and_pay(client: TestClient):
     assert paid["paidAt"] is not None
     october = client.get("/api/finance/fixed-bills", params={"month": "2026-10"}).json()
     assert october["pendingTotal"] == 0
-    # The next month starts from the last value (section 9.4)
+    # The next month starts from the last value
     november = client.get("/api/finance/fixed-bills", params={"month": "2026-11"}).json()
     assert (november["bills"][0]["amount"], november["bills"][0]["paid"]) == (110, False)
 
@@ -158,7 +158,7 @@ def test_deleting_an_adjusted_pot_does_not_change_available(client: TestClient):
     assert available(client)["total"] == 4400
 
 
-# ---------- Available and summary (section 9.6) ----------
+# ---------- Available and summary ----------
 
 
 def test_available_with_everything(client: TestClient):

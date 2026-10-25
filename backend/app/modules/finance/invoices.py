@@ -1,4 +1,4 @@
-"""Card invoice dates (sections 9.2 and 9.4). Pure functions, no database.
+"""Card invoice dates. Pure functions, no database.
 
 An invoice is named by the month of its DUE date ("2026-11" = the one paid in November).
 """
@@ -49,10 +49,10 @@ ClosingDateOf = Callable[[str], date]
 
 
 def suggest_invoice(card: CardSchedule, purchase: date, closing_of: ClosingDateOf) -> str:
-    """Invoice a purchase falls into (section 9.4): the first one that hasn't closed yet.
+    """Invoice a purchase falls into: the first one that hasn't closed yet.
 
     A purchase after the closing goes to the next invoice. On the closing day itself it
-    depends on the card's setting (decided in section 9.7).
+    depends on the card's setting.
     """
     month = add_months(month_of(purchase), -1)
     for _ in range(4):  # the right invoice is always within a few months

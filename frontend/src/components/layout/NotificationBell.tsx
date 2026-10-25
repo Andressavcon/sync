@@ -7,7 +7,7 @@ import { useApiData } from "@/hooks/useApiData";
 
 const REFRESH_MS = 5 * 60_000;
 
-/** Header bell: unread badge and the list (section 6, in-app only). */
+/** Header bell: unread badge and the list (in-app only). */
 export default function NotificationBell() {
   const [open, setOpen] = useState(false);
   const [tick, setTick] = useState(0);

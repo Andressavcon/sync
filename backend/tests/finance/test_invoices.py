@@ -1,4 +1,4 @@
-"""Invoice date rules (sections 9.2 / 9.4). No database."""
+"""Invoice date rules. No database."""
 
 from dataclasses import dataclass
 from datetime import date

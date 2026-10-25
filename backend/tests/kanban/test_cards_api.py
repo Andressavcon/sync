@@ -59,7 +59,7 @@ def test_list_cards_ordered_by_date_and_time(client: TestClient):
 def test_patch_changes_only_the_fields_sent(client: TestClient):
     card = create_card(client, content="Final PDF")
 
-    # Dragging to another day: new date, same time (section 4.4)
+    # Dragging to another day: new date, same time
     response = client.patch(f"/api/cards/{card['id']}", json={"dueDate": "2026-10-31"})
 
     updated = response.json()

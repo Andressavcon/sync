@@ -1,4 +1,4 @@
-"""Login with tokens (section 11), without a real Supabase: tokens signed with a local key."""
+"""Login with tokens, without a real Supabase: tokens signed with a local key."""
 
 from datetime import UTC, datetime, timedelta
 from typing import Any

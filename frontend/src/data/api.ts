@@ -37,7 +37,7 @@ async function request<T>(
   const headers: Record<string, string> = {};
   if (hasBody) headers["Content-Type"] = "application/json";
   const token = getAccessToken();
-  if (token) headers.Authorization = `Bearer ${token}`; // logged in (section 11)
+  if (token) headers.Authorization = `Bearer ${token}`; // logged in
   let response: Response;
   try {
     response = await fetch(buildUrl(path, options.query), {

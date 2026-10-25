@@ -31,7 +31,7 @@ def _enum_column(enum_class: type[StrEnum]) -> Enum:
 
 
 class WorkoutProgram(IdMixin, CreatedAtMixin, Base):
-    """A program with numbered sessions, e.g. "Metabólico" with 21 days (section 7.2)."""
+    """A program with numbered sessions, e.g. "Metabólico" with 21 days."""
 
     __tablename__ = "workout_programs"
 
@@ -57,7 +57,7 @@ class WorkoutSession(IdMixin, Base):
 
 
 class StandaloneWorkout(IdMixin, CreatedAtMixin, Base):
-    """Always the same, used as often as needed: Corrida, Jump, Yoga (section 7.2)."""
+    """Always the same, used as often as needed: Corrida, Jump, Yoga."""
 
     __tablename__ = "workout_standalone"
 

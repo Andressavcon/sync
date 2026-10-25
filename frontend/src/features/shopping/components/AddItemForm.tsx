@@ -31,7 +31,7 @@ export default function AddItemForm({ categories, onAdd }: Props) {
     : (categories[0]?.id ?? "");
   const typed = name.trim();
 
-  // Suggestions from archived lists while typing (section 8.3)
+  // Suggestions from archived lists while typing
   useEffect(() => {
     if (!typed) return;
     let active = true;

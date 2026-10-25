@@ -118,7 +118,7 @@ def test_edit_item(client: TestClient, category, item):
     assert updated["categoryId"] == bakery["id"]
 
 
-# ---------- The list, as shown (section 8.2 / 8.3) ----------
+# ---------- The list, as shown ----------
 
 
 def test_important_items_form_one_section_on_top(client: TestClient, category, item):
@@ -164,7 +164,7 @@ def test_unchecking_puts_the_item_back_in_place(client: TestClient, category, it
     assert names(get_list(client)["categories"][0]["items"]) == ["Maçã", "Banana"]
 
 
-# ---------- Completing the list (section 8.5) ----------
+# ---------- Completing the list ----------
 
 
 def test_empty_list_cannot_be_completed(client: TestClient):
@@ -214,7 +214,7 @@ def test_archives_are_kept_for_90_days(client: TestClient, category, item, set_u
     assert client.get("/api/shopping/archives").json() == []
 
 
-# ---------- Suggestions (section 8.3) ----------
+# ---------- Suggestions ----------
 
 
 def complete_with(client: TestClient, category_id: str, item, *item_names: str) -> None:

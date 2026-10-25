@@ -67,7 +67,7 @@ class TagService:
 
 
 class RecurrenceService:
-    """Recurring cards (section 4.10): rules and the cards generated from them."""
+    """Recurring cards: rules and the cards generated from them."""
 
     def __init__(self, rules: RecurrenceRepository, cards: CardRepository, tags: TagRepository):
         self.rules = rules
@@ -153,7 +153,7 @@ class RecurrenceService:
         dates = dates_between(rule, after, week_end)
         last = max(after, week_end)
         if after <= week_end:
-            # Upcoming events show only the next occurrence (section 4.10)
+            # Upcoming events show only the next occurrence
             upcoming = next_date(rule, last)
             if upcoming is not None:
                 dates.append(upcoming)
@@ -234,7 +234,7 @@ class CardService:
 
         new_status = changes.get("status")
         if new_status is not None and new_status != card.status:
-            # Section 4.4: keep when it was marked as done
+            # Keep when it was marked as done
             card.completed_at = utc_now() if new_status == CardStatus.DONE else None
 
         for field, value in changes.items():

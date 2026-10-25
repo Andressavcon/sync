@@ -10,7 +10,7 @@ interface Props {
   onSave: (categoryIds: string[]) => Promise<boolean>;
 }
 
-/** Puts the categories in the order of the market aisles (section 8.2). */
+/** Puts the categories in the order of the market aisles. */
 export default function CategoryOrderModal({ categories, onClose, onSave }: Props) {
   const [order, setOrder] = useState(categories);
   const [saving, setSaving] = useState(false);

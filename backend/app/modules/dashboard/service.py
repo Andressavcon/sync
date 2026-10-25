@@ -1,4 +1,4 @@
-"""Home screen (section 5). Only READS the other modules, through their own services."""
+"""Home screen. Only READS the other modules, through their own services."""
 
 import uuid
 from datetime import date, datetime, timedelta

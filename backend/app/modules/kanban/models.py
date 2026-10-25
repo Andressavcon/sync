@@ -67,7 +67,7 @@ class Tag(IdMixin, Base):
 
 
 class RecurrenceRule(IdMixin, CreatedAtMixin, Base):
-    """Template + schedule of a repeating card (section 4.10)."""
+    """Template + schedule of a repeating card."""
 
     __tablename__ = "recurrence_rules"
 
@@ -105,16 +105,16 @@ class Card(IdMixin, CreatedAtMixin, Base):
         ForeignKey("users.id", ondelete="CASCADE"), index=True
     )
     title: Mapped[str] = mapped_column(String(200))
-    # Free text, like a Notion page (section 4.3)
+    # Free text, like a Notion page
     content: Mapped[str] = mapped_column(Text, default="")
     status: Mapped[CardStatus] = mapped_column(_enum_column(CardStatus), default=CardStatus.PENDING)
     # Local calendar date and time chosen by the user (no time zone on purpose)
     due_date: Mapped[date] = mapped_column(index=True)
     due_time: Mapped[time]
-    # When it was marked as done (section 4.4); None while not done
+    # When it was marked as done; None while not done
     completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
-    # In-app reminder (section 6): None = off, 0 = on the day, 3 = three days before
+    # In-app reminder: None = off, 0 = on the day, 3 = three days before
     remind_days_before: Mapped[int | None]
 
     # Only for occurrences of a recurrence rule

@@ -20,5 +20,5 @@ router = APIRouter(prefix="/api/dashboard", tags=["dashboard"])
 
 @router.get("", response_model=DashboardRead)
 def get_dashboard(user: CurrentUser, service: ServiceDep, now: Now) -> DashboardRead:
-    """Everything the home screen shows, in one request (section 5)."""
+    """Everything the home screen shows, in one request."""
     return service.get(user.id, now)

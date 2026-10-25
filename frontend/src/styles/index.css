@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /*
- * "Liquid glass" theme (dark only, section 2.1): translucent panels with blur over a
+ * "Liquid glass" theme (dark only): translucent panels with blur over a
  * colored gradient background. Every screen uses these tokens and the `glass` utility,
  * so the whole look changes here.
  */

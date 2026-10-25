@@ -1,4 +1,4 @@
-"""Money available to spend (section 9.6). No database: plain objects."""
+"""Money available to spend. No database: plain objects."""
 
 from dataclasses import dataclass
 from datetime import date
@@ -150,8 +150,8 @@ def test_saving_reduces_and_withdrawing_gives_back():
     assert result.total == D("4150")
 
 
-def test_example_from_the_documentation():
-    # 9.6: R$ 1.600 for 4 weeks = R$ 400/week; spending R$ 250 leaves 1.350 for 3 = R$ 450
+def test_week_amount_goes_up_after_saving():
+    # R$ 1.600 for 4 weeks = R$ 400/week; spending R$ 250 leaves 1.350 for 3 = R$ 450
     salary_day = 1
     first_week = available(today=date(2026, 11, 2), salary_day=salary_day, salary_amount=D("1600"))
     after = available(
@@ -178,7 +178,7 @@ def test_everything_together():
     assert result.total == D("4500") - D("1550") - D("1000") - D("100") - D("200")
 
 
-# ---------- Fixed bill value per month (section 9.4) ----------
+# ---------- Fixed bill value per month ----------
 
 
 def test_bill_value_uses_the_month_then_the_last_edited_then_the_usual():

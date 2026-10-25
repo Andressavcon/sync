@@ -9,7 +9,7 @@ from app.core.models import CreatedAtMixin, IdMixin, utc_now
 
 
 class ShoppingCategory(IdMixin, Base):
-    """Hortifruti, Açougue, Limpeza... in the order of the market aisles (section 8.2)."""
+    """Hortifruti, Açougue, Limpeza... in the order of the market aisles."""
 
     __tablename__ = "shopping_categories"
     __table_args__ = (UniqueConstraint("user_id", "name"),)
@@ -36,14 +36,14 @@ class ShoppingItem(IdMixin, CreatedAtMixin, Base):
     quantity: Mapped[str] = mapped_column(String(30), default="")  # free text: "2 kg", "3"
     important: Mapped[bool] = mapped_column(default=False)
     purchased: Mapped[bool] = mapped_column(default=False)
-    # When it was checked: checked items go to the end in that order (section 8.3)
+    # When it was checked: checked items go to the end in that order
     purchased_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
     category: Mapped[ShoppingCategory] = relationship(lazy="selectin")
 
 
 class ArchivedList(IdMixin, Base):
-    """A completed list, kept only for reference and suggestions (section 8.5)."""
+    """A completed list, kept only for reference and suggestions."""
 
     __tablename__ = "shopping_archived_lists"
 

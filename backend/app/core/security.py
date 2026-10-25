@@ -1,4 +1,4 @@
-"""Login token check (section 11).
+"""Login token check.
 
 Google login happens in the frontend through Supabase Auth, which gives a signed JWT.
 The backend only checks the signature with Supabase's public keys (JWKS) and reads who

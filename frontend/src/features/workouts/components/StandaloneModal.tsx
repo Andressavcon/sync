@@ -20,7 +20,7 @@ interface Props {
   onChange: (action: () => Promise<unknown>) => Promise<boolean>;
 }
 
-/** Create or edit a standalone workout: Corrida, Jump, Yoga... (section 7.2). */
+/** Create or edit a standalone workout: Corrida, Jump, Yoga... */
 export default function StandaloneModal({ workout, onClose, onChange }: Props) {
   const [name, setName] = useState(workout?.name ?? "");
   const [steps, setSteps] = useState<Step[]>(workout?.steps ?? []);

@@ -10,7 +10,7 @@ from app.modules.kanban.models import CardStatus, Frequency
 # Trimmed, non-empty text (like @NotBlank @Size(max = ...))
 TagName = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=50)]
 CardTitle = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=200)]
-# Reminder: 0 = on the day, N = N days before (section 6)
+# Reminder: 0 = on the day, N = N days before
 RemindDays = Annotated[int, Field(ge=0, le=365)]
 
 
@@ -71,7 +71,7 @@ class CardRead(ApiModel):
     occurrence_date: date | None
 
 
-# ---------- Recurrence rules (section 4.10) ----------
+# ---------- Recurrence rules ----------
 
 Weekday = Annotated[int, Field(ge=0, le=6)]  # Monday = 0 ... Sunday = 6
 MonthDay = Annotated[int, Field(ge=1, le=31)]
@@ -115,7 +115,7 @@ class RecurrenceRead(ApiModel):
     end_date: date | None
 
 
-# ---------- Week board (section 4.8) ----------
+# ---------- Week board ----------
 
 
 class BoardCardRead(ApiModel):

@@ -1,4 +1,4 @@
-"""Unit tests of the board rules (section 4.8). No database: plain Card objects."""
+"""Unit tests of the board rules. No database: plain Card objects."""
 
 from datetime import UTC, date, datetime, time
 
@@ -80,7 +80,7 @@ def test_week_edges_stay_in_the_week():
 
 
 def test_late_card_inside_the_week_stays_in_its_day_with_the_flag():
-    # Monday's card not done: still in Monday's column, only flagged (section 4.4)
+    # Monday's card not done: still in Monday's column, only flagged
     board = build_board([make_card("monday task", date(2026, 10, 26))], NOW)
 
     item = board.days[0].cards[0]

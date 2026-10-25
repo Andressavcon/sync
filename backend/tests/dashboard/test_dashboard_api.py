@@ -1,4 +1,4 @@
-"""Home screen (section 5). Fixed clock: Wednesday 28 Oct 2026, 3 pm."""
+"""Home screen. Fixed clock: Wednesday 28 Oct 2026, 3 pm."""
 
 from datetime import datetime
 
@@ -122,7 +122,7 @@ def test_bills_reminder_waits_for_the_configured_day(client: TestClient):
     assert dashboard(client)["bills"]["active"] is False
 
 
-# ---------- Spending (section 9.6) ----------
+# ---------- Spending ----------
 
 
 def test_spending_percent_uses_the_week_budget_at_its_start(client: TestClient):

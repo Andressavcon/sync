@@ -34,7 +34,7 @@ export interface Dashboard {
     nextDueDate: string | null;
     daysToNextDue: number | null;
   };
-  /** Only the share of the week's money used: the Dashboard shows no values (section 5) */
+  /** Only the share of the week's money used: the Dashboard shows no values */
   spending: { percent: number | null; over: boolean };
 }
 

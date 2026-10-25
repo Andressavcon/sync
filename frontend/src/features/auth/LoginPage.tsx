@@ -2,7 +2,7 @@ import { useState } from "react";
 import Button from "@/components/ui/Button";
 import { signInWithGoogle } from "@/data/auth";
 
-/** Login screen: Google only, no own password (section 11). */
+/** Login screen: Google only, no own password. */
 export default function LoginPage() {
   const [opening, setOpening] = useState(false);
   const [error, setError] = useState<string | null>(null);

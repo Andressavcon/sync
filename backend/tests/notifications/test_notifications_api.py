@@ -1,4 +1,4 @@
-"""In-app reminders of Kanban cards (section 6). Fixed clock: 28 Oct 2026."""
+"""In-app reminders of Kanban cards. Fixed clock: 28 Oct 2026."""
 
 from collections.abc import Callable
 from datetime import date, datetime

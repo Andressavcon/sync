@@ -27,7 +27,7 @@ export default function CardsSection({ cards, onChange }: Props) {
       await financeRepository.deleteCard(card.id);
       await onChange(async () => {});
     } catch (e) {
-      // Section 9.4: a card with transactions is archived instead of deleted
+      // A card with transactions is archived instead of deleted
       if (e instanceof ApiError && e.status === 409) {
         const archive = window.confirm(
           `"${card.name}" já tem lançamentos ou parcelas. Arquivar (esconder e manter o histórico)?`

@@ -8,7 +8,7 @@ import {
 import { readJson, writeJson } from "@/lib/storage";
 import { applyCheck } from "../utils/listOps";
 
-/** Last list received from the server: opens the list without internet (section 8.3) */
+/** Last list received from the server: opens the list without internet */
 const CACHE_KEY = "sync:shopping:list";
 /** Checks made offline, sent when the connection comes back */
 const QUEUE_KEY = "sync:shopping:pending-checks";

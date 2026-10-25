@@ -39,7 +39,7 @@ ZERO = Decimal("0")
 
 
 class CardService:
-    """Cards and their invoices (sections 9.2 to 9.5)."""
+    """Cards and their invoices."""
 
     def __init__(self, repo: FinanceRepository):
         self.repo = repo
@@ -84,7 +84,7 @@ class CardService:
         return card
 
     def delete(self, user_id: uuid.UUID, card_id: uuid.UUID) -> None:
-        """Only cards without transactions; the others are archived (section 9.4)."""
+        """Only cards without transactions; the others are archived."""
         card = self.get(user_id, card_id)
         if self.repo.card_has_transactions(card.id):
             raise ConflictError("The card has transactions: archive it instead")
@@ -125,7 +125,7 @@ class CardService:
     def confirm_closing(
         self, user_id: uuid.UUID, card_id: uuid.UUID, month: str, closing: date
     ) -> InvoiceRead:
-        """Checked or edited this month's closing date: the alert goes away (section 9.4)."""
+        """Checked or edited this month's closing date: the alert goes away."""
         record = self._invoice_record(user_id, card_id, month)
         record.closing_date = closing
         record.confirmed = True
@@ -168,7 +168,7 @@ class CardService:
 
 
 class TransactionService:
-    """Incomes and expenses, including installments (sections 9.3 and 9.4)."""
+    """Incomes and expenses, including installments."""
 
     def __init__(self, repo: FinanceRepository, cards: CardService):
         self.repo = repo
@@ -195,7 +195,7 @@ class TransactionService:
         return transaction
 
     def create_installments(self, user_id: uuid.UUID, data: InstallmentCreate) -> list[Transaction]:
-        """One expense per installment, each one in the next invoice (section 9.2)."""
+        """One expense per installment, each one in the next invoice."""
         card = self._usable_card(user_id, data.card_id)
         first_invoice = data.invoice_month or self.cards.suggest(card, data.day)
         group = uuid.uuid4()
@@ -234,7 +234,7 @@ class TransactionService:
         changes = data.model_dump(exclude_unset=True, exclude_none=True)
 
         if scope == Scope.FOLLOWING:
-            # Like recurring cards: only "this one" or "this and the next" (section 9.4).
+            # Like recurring cards: only "this one" or "this and the next".
             # Title and amount go to the next installments; the rest only to this one.
             for other in self._following_installments(transaction):
                 for field in ("title", "amount"):

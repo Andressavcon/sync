@@ -1,4 +1,4 @@
-"""Recurring cards through the API (section 4.10).
+"""Recurring cards through the API.
 
 Fixed clock: Wednesday 28 Oct 2026 -> week from Mon 26 Oct to Sun 1 Nov.
 """

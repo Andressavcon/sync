@@ -18,7 +18,7 @@ def get_current_user(
     verifier: Verifier,
     authorization: Annotated[str | None, Header()] = None,
 ) -> User:
-    """The logged-in user (section 11).
+    """The logged-in user.
 
     Development mode (no Supabase configured): a fixed user, created on the first request.
     With login: the "Authorization: Bearer <token>" header is required and checked.

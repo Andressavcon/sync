@@ -6,7 +6,7 @@ import FormModal from "@/components/ui/FormModal";
 import { getErrorMessage } from "@/data/api";
 import { shoppingRepository, type ArchivedList } from "@/data/repositories/shoppingRepository";
 
-/** Completed lists from the last 90 days, read-only (section 8.5). */
+/** Completed lists from the last 90 days, read-only. */
 export default function ArchivesModal({ onClose }: { onClose: () => void }) {
   const [archives, setArchives] = useState<ArchivedList[] | null>(null);
   const [error, setError] = useState<string | null>(null);

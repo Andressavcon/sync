@@ -1,4 +1,4 @@
-"""Money available to spend (section 9.6). Pure functions, no database.
+"""Money available to spend. Pure functions, no database.
 
 available = salary
           - fixed bills due in the cycle
@@ -180,7 +180,7 @@ def calculate_available(
 def bill_value_in(month: str, usual: Decimal, recorded: dict[str, Decimal]) -> Decimal:
     """A month's value: the one edited for it; else the last month edited before; else the usual.
 
-    "Each month gets the registered value (or the previous month's), editable" (section 9.4).
+    "Each month gets the registered value (or the previous month's), editable".
     """
     if month in recorded:
         return recorded[month]

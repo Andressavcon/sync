@@ -17,7 +17,7 @@ from app.modules.shopping.schemas import (
 )
 from app.modules.users.models import User
 
-ARCHIVE_DAYS = 90  # section 8.5
+ARCHIVE_DAYS = 90  # archived lists are deleted after this
 MAX_SUGGESTIONS = 8
 # Created once for every new user; editable and reorderable
 DEFAULT_CATEGORIES = [
@@ -45,7 +45,7 @@ class ShoppingService:
     # ---------- The active list ----------
 
     def get_list(self, user: User) -> ShoppingListRead:
-        """The list ready to show: important section on top, then each category (section 8.2)."""
+        """The list ready to show: important section on top, then each category."""
         self._create_default_categories_once(user)
         user_id = user.id
         categories = self.repo.list_categories(user_id)
@@ -106,7 +106,7 @@ class ShoppingService:
         return self.repo.list_archives(user_id)
 
     def suggestions(self, user_id: uuid.UUID, query: str, now: datetime) -> list[str]:
-        """Item names from archived lists, most frequent first (section 8.3).
+        """Item names from archived lists, most frequent first.
 
         Skips what is already on the active list.
         """

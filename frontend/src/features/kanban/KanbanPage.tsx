@@ -103,7 +103,7 @@ export default function KanbanPage() {
     if (target.startsWith("day:")) {
       const date = target.slice(4);
       if (date === card.dueDate && card.status !== "done") return;
-      // New date, same time; a finished card dragged back to a day reopens (section 4.4)
+      // New date, same time; a finished card dragged back to a day reopens
       void change(() =>
         kanbanRepository.updateCard(card.id, {
           dueDate: date,

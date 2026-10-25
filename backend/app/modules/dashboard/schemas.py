@@ -18,7 +18,7 @@ class DashboardCard(ApiModel):
 
 
 class KanbanPanel(ApiModel):
-    today: list[DashboardCard]  # pending and in progress of the day (section 5)
+    today: list[DashboardCard]  # pending and in progress of the day
     late: list[DashboardCard]  # highlighted
     upcoming: list[DashboardCard]  # with countdown
 
@@ -42,13 +42,13 @@ class WorkoutPanel(ApiModel):
     blocks: list[WorkoutBlockSummary]
     done_blocks: int
     state: Literal["empty", "not_started", "in_progress", "done"]
-    last_days: list[WorkoutDay]  # 5 days before + today (section 7.5)
+    last_days: list[WorkoutDay]  # 5 days before + today
     month_completed: int
     month_goal: int  # weekly goal × 4
 
 
 class BillsPanel(ApiModel):
-    """Reminder without values (section 5)."""
+    """Reminder without values."""
 
     has_bills: bool
     active: bool  # from the configured day of the month on

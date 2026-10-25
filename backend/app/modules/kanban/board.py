@@ -1,4 +1,4 @@
-"""Builds the week board from the cards (table in section 4.8).
+"""Builds the week board from the cards.
 
 Pure functions: no database, no HTTP. Easy to test with any date.
 
@@ -51,7 +51,7 @@ def week_bounds(today: date, week_starts_on: int = MONDAY) -> tuple[date, date]:
 
 
 def is_late(card: Card, now: datetime) -> bool:
-    """Late = due date and time already passed and not done (section 4.4)."""
+    """Late = due date and time already passed and not done."""
     due = datetime.combine(card.due_date, card.due_time)
     return card.status != CardStatus.DONE and due < now
 
@@ -88,7 +88,7 @@ def build_board(cards: Iterable[Card], now: datetime, week_starts_on: int = MOND
         return item.card.due_date, item.card.due_time
 
     for day in days:
-        day.cards.sort(key=by_due)  # inside a day: by delivery time (section 4.4)
+        day.cards.sort(key=by_due)  # inside a day: by delivery time
     overdue.sort(key=by_due)
     upcoming.sort(key=by_due)
 

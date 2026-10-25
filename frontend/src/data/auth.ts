@@ -1,4 +1,4 @@
-/** Google login through Supabase Auth (section 11). */
+/** Google login through Supabase Auth. */
 
 import { createClient } from "@supabase/supabase-js";
 

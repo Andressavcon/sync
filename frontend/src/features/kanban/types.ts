@@ -1,6 +1,6 @@
 import type { CardStatus, Frequency } from "@/data/repositories/kanbanRepository";
 
-/** Which sections outside the week are visible (section 4.2 filters) */
+/** Which sections outside the week are visible */
 export interface Visibility {
   overdue: boolean;
   upcoming: boolean;
@@ -30,7 +30,7 @@ export interface RepeatSettings {
   endDate: string; // empty = repeats forever
 }
 
-/** In-app reminder of a card (section 6): null = off, 0 = on the day */
+/** In-app reminder of a card: null = off, 0 = on the day */
 export const REMINDER_OPTIONS: { value: number | null; label: string }[] = [
   { value: null, label: "Sem lembrete" },
   { value: 0, label: "No dia" },

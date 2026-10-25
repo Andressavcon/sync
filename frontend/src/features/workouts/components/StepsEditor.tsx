@@ -41,7 +41,7 @@ interface Props {
   onChange: (steps: Step[]) => void;
 }
 
-/** List of steps of the three kinds, which can be mixed (section 7.3). */
+/** List of steps of the three kinds, which can be mixed. */
 export default function StepsEditor({ steps, onChange }: Props) {
   const replace = (index: number, step: Step) =>
     onChange(steps.map((s, i) => (i === index ? step : s)));

@@ -1,4 +1,4 @@
-"""Cards, invoices and transactions (sections 9.2 to 9.5). Fixed clock: 28 Oct 2026."""
+"""Cards, invoices and transactions. Fixed clock: 28 Oct 2026."""
 
 from datetime import datetime
 
@@ -193,7 +193,7 @@ def test_list_transactions_newest_first_between_dates(client: TestClient):
     assert [t["title"] for t in response.json()] == ["B", "A"]
 
 
-# ---------- Installments (sections 9.2 / 9.4) ----------
+# ---------- Installments ----------
 
 
 def test_installments_fall_in_the_next_invoices(client: TestClient, nubank: dict):

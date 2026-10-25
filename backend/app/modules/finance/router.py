@@ -289,7 +289,7 @@ def set_salary(data: SalaryUpdate, user: CurrentUser, service: BudgetServiceDep)
 
 @router.get("/available", response_model=AvailableRead)
 def available(user: CurrentUser, service: BudgetServiceDep, now: Now) -> AvailableRead:
-    """Money available to spend in the cycle and per week (section 9.6)."""
+    """Money available to spend in the cycle and per week."""
     return service.available(user.id, now.date())
 
 
@@ -308,5 +308,5 @@ def suggested_invoice(
 
 @router.get("/week-spending", response_model=WeekSpending)
 def week_spending(user: CurrentUser, service: BudgetServiceDep, now: Now) -> WeekSpending:
-    """How much of this week's money was already used (section 9.6)."""
+    """How much of this week's money was already used."""
     return service.week_spending(user.id, now.date())

@@ -8,7 +8,7 @@ interface Props {
   onChange: (value: RepeatSettings) => void;
 }
 
-/** Frequency, weekdays / day of the month and optional end date (section 4.10). */
+/** Frequency, weekdays / day of the month and optional end date. */
 export default function RepeatFields({ value, onChange }: Props) {
   const set = (changes: Partial<RepeatSettings>) => onChange({ ...value, ...changes });
 

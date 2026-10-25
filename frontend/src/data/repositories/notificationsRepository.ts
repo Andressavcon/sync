@@ -1,6 +1,6 @@
 import { api } from "@/data/api";
 
-/** In-app reminders (section 6), mirror app/modules/notifications/schemas.py */
+/** In-app reminders, mirror app/modules/notifications/schemas.py */
 export interface AppNotification {
   id: string;
   cardId: string;
