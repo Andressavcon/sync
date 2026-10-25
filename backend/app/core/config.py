@@ -13,6 +13,8 @@ class Settings(BaseSettings):
     cors_origins: list[str] = ["http://localhost:5173"]
     # User's time zone: decides "today", "this week" and what is late
     timezone: str = "America/Sao_Paulo"
+    # Supabase project (https://xxxx.supabase.co). Empty = no login, development user
+    supabase_url: str = ""
 
 
 settings = Settings()

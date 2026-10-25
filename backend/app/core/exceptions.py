@@ -12,6 +12,10 @@ class AppError(Exception):
         self.message = message
 
 
+class UnauthorizedError(AppError):
+    status_code = 401
+
+
 class NotFoundError(AppError):
     status_code = 404
 
