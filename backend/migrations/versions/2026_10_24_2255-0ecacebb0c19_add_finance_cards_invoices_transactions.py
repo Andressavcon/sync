@@ -26,7 +26,7 @@ def upgrade() -> None:
     sa.Column('name', sa.String(length=50), nullable=False),
     sa.Column('due_day', sa.Integer(), nullable=False),
     sa.Column('closing_day', sa.Integer(), nullable=False),
-    sa.Column('closing_day_purchase_goes_next', sa.Boolean(), server_default=sa.text('1'), nullable=False),
+    sa.Column('closing_day_purchase_goes_next', sa.Boolean(), server_default=sa.true(), nullable=False),
     sa.Column('archived', sa.Boolean(), nullable=False),
     sa.Column('id', sa.Uuid(), nullable=False),
     sa.Column('created_at', sa.DateTime(timezone=True), nullable=False),

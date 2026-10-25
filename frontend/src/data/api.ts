@@ -3,7 +3,7 @@
 import { getAccessToken } from "@/data/auth";
 
 // Empty in development (Vite proxies /api to the backend); full URL in production
-const BASE_URL: string = import.meta.env.VITE_API_URL ?? "";
+const BASE_URL: string = (import.meta.env.VITE_API_URL ?? "").replace(/\/+$/, "");
 
 export class ApiError extends Error {
   readonly status: number;

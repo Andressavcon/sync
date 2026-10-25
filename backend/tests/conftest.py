@@ -1,5 +1,6 @@
 """Shared test fixtures. Pytest loads this file automatically (no import needed)."""
 
+import os
 from collections.abc import Iterator
 
 import pytest
@@ -14,15 +15,26 @@ from app.main import app as fastapi_app
 from app.modules.users.models import User
 
 
+# Set it to run the same tests on PostgreSQL (CI does): postgresql+psycopg://user:pass@host/db
+TEST_DATABASE_URL = os.environ.get("TEST_DATABASE_URL")
+
+
 @pytest.fixture
 def db() -> Iterator[Session]:
-    """A fresh in-memory database for each test (like @BeforeEach + @AfterEach)."""
-    engine = create_engine(
-        "sqlite://",
-        connect_args={"check_same_thread": False},
-        poolclass=StaticPool,  # one shared connection, so the in-memory DB survives
-    )
-    enable_sqlite_foreign_keys(engine)
+    """A fresh empty database for each test (like @BeforeEach + @AfterEach).
+
+    In-memory SQLite by default; PostgreSQL when TEST_DATABASE_URL is set.
+    """
+    if TEST_DATABASE_URL:
+        engine = create_engine(TEST_DATABASE_URL)
+        Base.metadata.drop_all(engine)
+    else:
+        engine = create_engine(
+            "sqlite://",
+            connect_args={"check_same_thread": False},
+            poolclass=StaticPool,  # one shared connection, so the in-memory DB survives
+        )
+        enable_sqlite_foreign_keys(engine)
     Base.metadata.create_all(engine)
 
     with Session(engine, autoflush=False) as session:  # same as SessionLocal

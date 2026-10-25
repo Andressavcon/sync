@@ -49,9 +49,13 @@ npm run dev
 
 Sem configurar nada, o app roda com um usuário de desenvolvimento. Para ligar o login com Google, veja a seção 11.2 da [documentação](docs/documentacao.md).
 
+## Publicar
+
+Passo a passo (Supabase, Render e Vercel): [docs/deploy.md](docs/deploy.md).
+
 ## Qualidade
 
 ```bash
-cd backend && uv run pytest && uv run ruff check .     # 218 testes
+cd backend && uv run pytest && uv run ruff check .     # 218 testes (SQLite; o CI roda também no PostgreSQL)
 cd frontend && npm run build && npm run lint           # tipos + lint
 ```

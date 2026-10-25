@@ -20,7 +20,8 @@ def enable_sqlite_foreign_keys(engine: Engine) -> None:
 is_sqlite = settings.database_url.startswith("sqlite")
 connect_args = {"check_same_thread": False} if is_sqlite else {}
 
-engine = create_engine(settings.database_url, connect_args=connect_args)
+# pool_pre_ping: checks a pooled connection before using it (cloud databases close idle ones)
+engine = create_engine(settings.database_url, connect_args=connect_args, pool_pre_ping=True)
 if is_sqlite:
     enable_sqlite_foreign_keys(engine)
 

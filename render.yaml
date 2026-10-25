@@ -1,0 +1,27 @@
+# Render Blueprint: the backend API (FastAPI). Render reads this file and creates the service.
+# Secrets (sync: false) are typed in the Render dashboard, never here.
+services:
+  - type: web
+    name: sync-api
+    runtime: python
+    plan: free
+    region: virginia # close to Supabase us-east-1 (every query crosses this distance)
+    rootDir: backend
+    # uv installs Python 3.14 (.python-version) and the locked dependencies (uv.lock)
+    buildCommand: pip install uv && uv sync --frozen --no-dev
+    # Migrations first (like Flyway on startup), then the server
+    startCommand: uv run --no-sync alembic upgrade head && uv run --no-sync uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: TIMEZONE
+        value: America/Sao_Paulo
+      - key: DATABASE_URL # Supabase > Connect > Session pooler
+        sync: false
+      - key: SUPABASE_URL # https://<project>.supabase.co
+        sync: false
+      - key: CORS_ORIGINS # ["https://<your-app>.vercel.app"]
+        sync: false
+      - key: CORS_ORIGIN_REGEX # optional, e.g. Vercel previews
+        sync: false
