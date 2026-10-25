@@ -30,4 +30,4 @@ development user is used.
 Each module has `models.py` (tables), `schemas.py` (JSON in/out), `repository.py` (queries),
 `service.py` (rules) and `router.py` (endpoints).
 
-Architecture and conventions: [docs/documentacao.md](../docs/documentacao.md), section 16.
+Architecture and conventions: see the [main README](../README.md#architecture).

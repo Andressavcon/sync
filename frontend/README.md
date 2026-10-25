@@ -16,4 +16,4 @@ opens without login (development).
 - `src/data/` — API client, login and one repository per module (screens never call the API directly)
 - `src/components/ui/` — shared components; the visual style lives there and in `src/styles/index.css`
 
-Architecture and conventions: [docs/documentacao.md](../docs/documentacao.md), section 15.
+Architecture and conventions: see the [main README](../README.md#architecture).
