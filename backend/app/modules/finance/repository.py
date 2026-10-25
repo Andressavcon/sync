@@ -45,17 +45,19 @@ class FinanceRepository:
         rows = self.db.scalars(select(Invoice).where(Invoice.card_id == card_id)).all()
         return {invoice.month: invoice for invoice in rows}
 
-    def invoice_totals(self, card_id: uuid.UUID) -> dict[str, Decimal]:
-        """{"2026-11": Decimal("1234.50"), ...}: SUM ... GROUP BY invoice month."""
-        rows = self.db.execute(
-            select(Transaction.invoice_month, func.sum(Transaction.amount))
-            .where(
-                Transaction.card_id == card_id,
-                Transaction.kind == TransactionKind.EXPENSE,
-                Transaction.payment_method == PaymentMethod.CARD,
-            )
-            .group_by(Transaction.invoice_month)
-        ).all()
+    def invoice_totals(self, card_id: uuid.UUID, before: date | None = None) -> dict[str, Decimal]:
+        """{"2026-11": Decimal("1234.50"), ...}: SUM ... GROUP BY invoice month.
+
+        With `before`, only purchases made before that day count.
+        """
+        query = select(Transaction.invoice_month, func.sum(Transaction.amount)).where(
+            Transaction.card_id == card_id,
+            Transaction.kind == TransactionKind.EXPENSE,
+            Transaction.payment_method == PaymentMethod.CARD,
+        )
+        if before is not None:
+            query = query.where(Transaction.day < before)
+        rows = self.db.execute(query.group_by(Transaction.invoice_month)).all()
         return {month: Decimal(total) for month, total in rows if month}
 
     def invoice_transactions(self, card_id: uuid.UUID, month: str) -> Sequence[Transaction]:

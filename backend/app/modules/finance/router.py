@@ -41,6 +41,7 @@ from app.modules.finance.schemas import (
     TransactionCreate,
     TransactionRead,
     TransactionUpdate,
+    WeekSpending,
 )
 from app.modules.finance.service import CardService, TransactionService
 
@@ -303,3 +304,9 @@ def suggested_invoice(
 ) -> SuggestedInvoice:
     """Invoice a purchase on `day` would fall into (shown in the form before saving)."""
     return service.suggested_invoice(user.id, card_id, day)
+
+
+@router.get("/week-spending", response_model=WeekSpending)
+def week_spending(user: CurrentUser, service: BudgetServiceDep, now: Now) -> WeekSpending:
+    """How much of this week's money was already used (section 9.6)."""
+    return service.week_spending(user.id, now.date())

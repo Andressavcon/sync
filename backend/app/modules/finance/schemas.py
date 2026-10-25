@@ -254,3 +254,11 @@ class MonthSummary(ApiModel):
 class SuggestedInvoice(ApiModel):
     month: str
     due_date: date
+
+
+class WeekSpending(ApiModel):
+    """Share of the week's money already used (the Dashboard shows only the percent)."""
+
+    week_budget: Amount  # available for the week when it started
+    used: Amount
+    percent: int | None  # None when there was nothing available this week

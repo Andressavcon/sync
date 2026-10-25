@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 from app.core.config import settings
 from app.core.database import get_db
 from app.core.exceptions import register_exception_handlers
+from app.modules.dashboard.router import router as dashboard_router
 from app.modules.finance.router import router as finance_router
 from app.modules.kanban.router import router as kanban_router
 from app.modules.notifications.router import router as notifications_router
@@ -23,6 +24,7 @@ app.include_router(workouts_router)
 app.include_router(finance_router)
 app.include_router(settings_router)
 app.include_router(notifications_router)
+app.include_router(dashboard_router)
 
 app.add_middleware(
     CORSMiddleware,

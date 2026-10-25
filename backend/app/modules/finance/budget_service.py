@@ -6,6 +6,7 @@ from decimal import Decimal
 
 from app.core.exceptions import InvalidDataError, NotFoundError
 from app.modules.finance.available import (
+    Available,
     BillInput,
     CardInput,
     bill_value_in,
@@ -36,6 +37,7 @@ from app.modules.finance.schemas import (
     PotsRead,
     SalaryRead,
     SalaryUpdate,
+    WeekSpending,
 )
 
 ZERO = Decimal("0")
@@ -219,6 +221,46 @@ class BudgetService:
     # ---------- Overview ----------
 
     def available(self, user_id: uuid.UUID, today: date) -> AvailableRead:
+        result = self._calculate(user_id, today)
+        return AvailableRead(
+            cycle_start=result.cycle.start,
+            cycle_last_day=result.cycle.end - timedelta(days=1),
+            days_left=result.days_left,
+            salary=result.salary,
+            fixed_bills=result.fixed_bills,
+            invoices=result.invoices,
+            one_off_expenses=result.one_off_expenses,
+            saved=result.saved,
+            extra_income=result.extra_income,
+            total=result.total,
+            weeks_left=result.weeks_left,
+            per_week=result.per_week,
+        )
+
+    def week_spending(self, user_id: uuid.UUID, today: date) -> WeekSpending:
+        """How much of this week's money was used (section 9.6).
+
+        100% is the week's available amount AT THE START of the week, so it doesn't move
+        with every purchase. Used = available then - available now (purchases, pix,
+        savings... made since then).
+        """
+        salary = self.salary(user_id)
+        cycle = cycle_of(today, salary.day)
+        monday = today - timedelta(days=today.weekday())
+        start = max(monday, cycle.start)  # a cycle that began this week starts there
+
+        at_start = self._calculate(user_id, start, before=start)
+        now = self._calculate(user_id, today)
+        used = at_start.total - now.total
+        budget = at_start.per_week
+        percent = int((used / budget * 100).to_integral_value()) if budget > 0 else None
+        return WeekSpending(week_budget=budget, used=used, percent=percent)
+
+    def _calculate(self, user_id: uuid.UUID, today: date, before: date | None = None) -> Available:
+        """The available calculation with the data from the database.
+
+        With `before`, only what happened before that day counts (a picture of that moment).
+        """
         salary = self.salary(user_id)
         cycle = cycle_of(today, salary.day)
 
@@ -236,30 +278,19 @@ class BudgetService:
         ]
         # Archived cards still have invoices to pay
         card_inputs = [
-            CardInput(schedule=card, totals=self.finance.invoice_totals(card.id))
+            CardInput(schedule=card, totals=self.finance.invoice_totals(card.id, before))
             for card in self.finance.list_cards(user_id)
         ]
-        transactions = self.finance.list_transactions(
-            user_id, cycle.start, cycle.end - timedelta(days=1), EVERYTHING
+        last_day = cycle.end - timedelta(days=1)
+        if before is not None:
+            last_day = min(last_day, before - timedelta(days=1))
+        transactions = self.finance.list_transactions(user_id, cycle.start, last_day, EVERYTHING)
+        movements = self.budget.movements_between(
+            user_id, cycle.start, min(cycle.end, before) if before else cycle.end
         )
-        movements = self.budget.movements_between(user_id, cycle.start, cycle.end)
 
-        result = calculate_available(
+        return calculate_available(
             today, salary.amount, salary.day, bill_inputs, card_inputs, transactions, movements
-        )
-        return AvailableRead(
-            cycle_start=result.cycle.start,
-            cycle_last_day=result.cycle.end - timedelta(days=1),
-            days_left=result.days_left,
-            salary=result.salary,
-            fixed_bills=result.fixed_bills,
-            invoices=result.invoices,
-            one_off_expenses=result.one_off_expenses,
-            saved=result.saved,
-            extra_income=result.extra_income,
-            total=result.total,
-            weeks_left=result.weeks_left,
-            per_week=result.per_week,
         )
 
     def month_summary(self, user_id: uuid.UUID, month: str) -> MonthSummary:
