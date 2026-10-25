@@ -8,17 +8,12 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-export type ModuleId =
-  | "dashboard"
-  | "kanban"
-  | "treinos"
-  | "compras"
-  | "financas"
-  | "configuracoes";
+export type ModuleId = "dashboard" | "kanban" | "workouts" | "shopping" | "finance" | "settings";
 
 export interface AppModule {
   id: ModuleId;
   label: string;
+  /** URL in Portuguese: it is part of what the user sees */
   path: string;
   icon: LucideIcon;
   toggleable: boolean;
@@ -27,8 +22,8 @@ export interface AppModule {
 export const MODULES: AppModule[] = [
   { id: "dashboard", label: "Dashboard", path: "/dashboard", icon: LayoutDashboard, toggleable: true },
   { id: "kanban", label: "Kanban", path: "/kanban", icon: KanbanSquare, toggleable: true },
-  { id: "treinos", label: "Treinos", path: "/treinos", icon: Dumbbell, toggleable: true },
-  { id: "compras", label: "Compras", path: "/compras", icon: ShoppingCart, toggleable: true },
-  { id: "financas", label: "Finanças", path: "/financas", icon: Wallet, toggleable: true },
-  { id: "configuracoes", label: "Configurações", path: "/configuracoes", icon: Settings, toggleable: false },
+  { id: "workouts", label: "Treinos", path: "/treinos", icon: Dumbbell, toggleable: true },
+  { id: "shopping", label: "Compras", path: "/compras", icon: ShoppingCart, toggleable: true },
+  { id: "finance", label: "Finanças", path: "/financas", icon: Wallet, toggleable: true },
+  { id: "settings", label: "Configurações", path: "/configuracoes", icon: Settings, toggleable: false },
 ];

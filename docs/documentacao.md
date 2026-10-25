@@ -375,9 +375,12 @@ Fluxo:
 - **[definido]** "Concluir lista" encerra a compra: a lista vai para o arquivo e começa uma nova lista vazia.
 - **[definido]** A lista concluída fica **arquivada por um tempo**, só para consulta: dá para ver o que já foi comprado, sem editar.
 - **[definido]** Os itens das listas arquivadas alimentam as **sugestões** ao digitar.
-- **[sugestão]** Itens não marcados na hora de concluir passam para a nova lista.
-- **[sugestão]** Cada lista arquivada mostra a data de conclusão, numa tela "Listas anteriores".
-- **[sugestão]** Tempo de arquivo: 90 dias. Depois disso a lista é apagada e deixa de alimentar as sugestões.
+- **[definido]** Itens não marcados na hora de concluir passam para a nova lista.
+- **[definido]** Cada lista arquivada mostra a data de conclusão, numa tela "Listas anteriores".
+- **[definido]** Tempo de arquivo: 90 dias. Depois disso a lista é apagada e deixa de alimentar as sugestões.
+- **[definido]** Sugestões ordenadas pelos itens mais frequentes nas listas arquivadas, sem repetir o que já está na lista.
+- **[definido]** Todo usuário novo começa com categorias padrão (Hortifruti, Açougue, Padaria, Laticínios, Mercearia, Limpeza, Higiene), editáveis e reordenáveis. Elas são criadas uma única vez.
+- **[definido]** Offline: a lista mostra a última cópia salva no aparelho; marcar e desmarcar funcionam e são enviados quando a internet volta. Adicionar, editar e excluir precisam de conexão.
 
 ---
 
@@ -678,7 +681,7 @@ Os tokens do Tailwind seguem a tabela da seção 2.1, em `src/styles/index.css` 
 1. **[feito]** Shell, Configurações, componentes `ui/`.
 2. **[feito, parcial]** Kanban, Compras, Treinos e Finanças com dados locais.
 3. Camada de repositórios, tradução do código para inglês e correções.
-4. Ligar cada módulo à API, conforme o back fica pronto. **[feito]** Kanban.
+4. Ligar cada módulo à API, conforme o back fica pronto. **[feito]** Kanban, Lista de compras.
 5. Dashboard, Notificações, Login e PWA.
 6. **Estilização final**: etapa dedicada ao visual (tipografia, espaçamentos, animações, mobile), aplicada nos tokens e nos componentes `ui/`. Até lá, toda tela usa só os componentes compartilhados.
 
@@ -690,7 +693,7 @@ Os tokens do Tailwind seguem a tabela da seção 2.1, em `src/styles/index.css` 
 
 - Kanban: ~~recorrência, editar/excluir tags~~ (feito, ligado à API); falta lembrete de evento (seção 6) e editar a regra de repetição pela tela (a API já tem `PATCH /api/recurrences/{id}`).
 - Treinos: adicionar/editar/excluir na biblioteca; cronômetro perde tempo quando o app fica em segundo plano (a próxima etapa começa na hora do "tick", e não no fim da anterior).
-- Compras: sugestão de itens frequentes, tela "Listas anteriores", ordem das categorias, gasto virar despesa em Finanças.
+- Compras: ~~sugestões, "Listas anteriores", ordem das categorias, offline dos checks~~ (feito, ligado à API); falta o gasto virar despesa em Finanças e o app **abrir** sem internet (depende do service worker do PWA).
 - Finanças: receitas recorrentes; excluir pote devolve o valor ao disponível sem avisar; lançamentos com data futura somem da lista.
 - Dashboard, Notificações, Login e PWA ainda não existem.
 - Nenhum registro tem o campo de usuário dono (resolvido quando os dados passarem a vir do back).

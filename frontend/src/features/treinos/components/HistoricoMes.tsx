@@ -29,7 +29,7 @@ const diaConcluido = (blocos: BlocoDia[] | undefined) =>
 /** Calendário do mês: só para consulta, sem editar dias passados (seção 7.2). */
 export default function HistoricoMes() {
   const dias = useTreinos((s) => s.dias);
-  const metaSemana = useSettings((s) => s.metaTreinosSemana);
+  const metaSemana = useSettings((s) => s.weeklyWorkoutGoal);
 
   const [mes, setMes] = useState(() => startOfMonth(new Date()));
   const [selecionado, setSelecionado] = useState<string | null>(null);

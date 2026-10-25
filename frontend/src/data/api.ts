@@ -62,13 +62,24 @@ export const api = {
     request<T>("POST", path, { body, query }),
   patch: <T>(path: string, body: unknown, query?: Query) =>
     request<T>("PATCH", path, { body, query }),
+  put: <T>(path: string, body: unknown, query?: Query) => request<T>("PUT", path, { body, query }),
   delete: (path: string, query?: Query) => request<void>("DELETE", path, { query }),
 };
 
+/** True when the request never reached the server (no internet, server down). */
+export function isOfflineError(error: unknown): boolean {
+  return error instanceof ApiError && error.status === 0;
+}
+
 /** Text to show the user for any error thrown by the API or the code. */
 export function getErrorMessage(error: unknown): string {
-  if (error instanceof ApiError && error.status === 0) return error.message;
-  if (error instanceof ApiError && error.status >= 500) return "Erro no servidor. Tente de novo.";
-  if (error instanceof Error) return error.message;
-  return "Algo deu errado.";
+  // The API answers in English; the screen speaks Portuguese
+  if (error instanceof ApiError) {
+    if (error.status === 0) return error.message;
+    if (error.status === 404) return "Não encontrado: talvez já tenha sido excluído.";
+    if (error.status === 409) return "Já existe um registro com esse nome.";
+    if (error.status === 422) return "Dados inválidos. Confira os campos.";
+    if (error.status >= 500) return "Erro no servidor. Tente de novo.";
+  }
+  return "Algo deu errado. Tente de novo.";
 }
