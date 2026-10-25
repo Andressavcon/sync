@@ -1,30 +1,40 @@
+import { lazy, Suspense, type ComponentType, type LazyExoticComponent } from "react";
 import { createBrowserRouter, type RouteObject } from "react-router-dom";
-import type { ReactNode } from "react";
 import AppShell from "@/components/layout/AppShell";
 import ModulePage from "@/components/ui/ModulePage";
 import { MODULES, type ModuleId } from "@/lib/modules";
-import ModuleGuard from "./ModuleGuard";
 import HomeRedirect from "./HomeRedirect";
-import DashboardPage from "@/features/dashboard/DashboardPage";
-import SettingsPage from "@/features/settings/SettingsPage";
-import ShoppingPage from "@/features/shopping/ShoppingPage";
-import KanbanPage from "@/features/kanban/KanbanPage";
-import WorkoutsPage from "@/features/workouts/WorkoutsPage";
-import FinancePage from "@/features/finance/FinancePage";
+import ModuleGuard from "./ModuleGuard";
 
-const pages: Partial<Record<ModuleId, ReactNode>> = {
-  dashboard: <DashboardPage />,
-  settings: <SettingsPage />,
-  shopping: <ShoppingPage />,
-  kanban: <KanbanPage />,
-  workouts: <WorkoutsPage />,
-  finance: <FinancePage />,
+// Each page is its own file, downloaded only when it is opened (smaller first load)
+const pages: Partial<Record<ModuleId, LazyExoticComponent<ComponentType>>> = {
+  dashboard: lazy(() => import("@/features/dashboard/DashboardPage")),
+  kanban: lazy(() => import("@/features/kanban/KanbanPage")),
+  workouts: lazy(() => import("@/features/workouts/WorkoutsPage")),
+  shopping: lazy(() => import("@/features/shopping/ShoppingPage")),
+  finance: lazy(() => import("@/features/finance/FinancePage")),
+  settings: lazy(() => import("@/features/settings/SettingsPage")),
 };
 
-const moduleRoutes: RouteObject[] = MODULES.map((m) => ({
-  path: m.path,
-  element: <ModuleGuard id={m.id}>{pages[m.id] ?? <ModulePage title={m.label} />}</ModuleGuard>,
-}));
+const loading = <p className="py-10 text-center text-muted">Carregando…</p>;
+
+const moduleRoutes: RouteObject[] = MODULES.map((m) => {
+  const Page = pages[m.id];
+  return {
+    path: m.path,
+    element: (
+      <ModuleGuard id={m.id}>
+        {Page ? (
+          <Suspense fallback={loading}>
+            <Page />
+          </Suspense>
+        ) : (
+          <ModulePage title={m.label} />
+        )}
+      </ModuleGuard>
+    ),
+  };
+});
 
 export const router = createBrowserRouter([
   {
