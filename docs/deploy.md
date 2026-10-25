@@ -27,11 +27,11 @@ A ordem importa, porque cada passo usa um endereço do passo anterior.
 ## 2. Supabase (banco + login)
 
 1. supabase.com → **New project**.
-   - **Region: East US (North Virginia)**, a mesma região do Render, porque cada consulta ao banco atravessa essa distância.
+   - **Region: East US (Ohio)**, a mesma região do Render (`render.yaml`), porque cada consulta ao banco atravessa essa distância.
    - Crie uma senha forte para o banco e **guarde** (ela vai na `DATABASE_URL`).
 2. **Endereço do banco**: botão **Connect** (no topo) → **Session pooler** → copie a URI:
    ```
-   postgresql://postgres.<ref>:<SENHA>@aws-0-us-east-1.pooler.supabase.com:5432/postgres
+   postgresql://postgres.<ref>:<SENHA>@aws-0-us-east-2.pooler.supabase.com:5432/postgres
    ```
    Use o **Session pooler**: a conexão direta só funciona por IPv6, e o Render gratuito usa IPv4. Troque `<SENHA>` pela senha do banco.
 3. **Endereço e chave do projeto**: **Project Settings → API**: copie a **Project URL** e a chave **anon / publishable** (ela é pública; vai para o front).

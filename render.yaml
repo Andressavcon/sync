@@ -5,7 +5,7 @@ services:
     name: sync-api
     runtime: python
     plan: free
-    region: virginia # close to Supabase us-east-1 (every query crosses this distance)
+    region: ohio # same place as the Supabase database (us-east-2): every query crosses this distance
     rootDir: backend
     # uv installs Python 3.14 (.python-version) and the locked dependencies (uv.lock)
     buildCommand: pip install uv && uv sync --frozen --no-dev
