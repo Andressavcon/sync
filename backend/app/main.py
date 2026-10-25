@@ -10,11 +10,13 @@ from app.core.database import get_db
 from app.core.exceptions import register_exception_handlers
 from app.modules.kanban.router import router as kanban_router
 from app.modules.shopping.router import router as shopping_router
+from app.modules.workouts.router import router as workouts_router
 
 app = FastAPI(title=settings.app_name, version="0.1.0")
 register_exception_handlers(app)
 app.include_router(kanban_router)
 app.include_router(shopping_router)
+app.include_router(workouts_router)
 
 app.add_middleware(
     CORSMiddleware,
