@@ -8,6 +8,7 @@ uv run alembic upgrade head              # create/update the database
 uv run fastapi dev app/main.py           # development server: http://localhost:8000
 uv run pytest                            # tests
 uv run ruff check . && uv run ruff format .   # lint + format
+uv run python -m scripts.seed_demo     # fictional demo data (erases the development user's data)
 ```
 
 Interactive API docs: http://localhost:8000/docs

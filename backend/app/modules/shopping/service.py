@@ -28,6 +28,7 @@ DEFAULT_CATEGORIES = [
     "Mercearia",
     "Limpeza",
     "Higiene",
+    "Outros",
 ]
 
 

@@ -184,6 +184,8 @@ npm run dev
 
 With no configuration, the app runs without login, using a development user and a local SQLite database.
 
+To fill it with fictional demo data (tasks, workouts, a shopping list and finances), run `uv run python -m scripts.seed_demo` in `backend/`. It erases the development user's data first, and the dates are relative to today.
+
 To turn on Google login:
 1. Create a Supabase project and enable the Google provider.
 2. In the backend, set `SUPABASE_URL` in `backend/.env`.
