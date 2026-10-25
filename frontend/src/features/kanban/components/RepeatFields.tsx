@@ -20,7 +20,7 @@ export default function RepeatFields({ value, onChange }: Props) {
     });
 
   return (
-    <div className="flex flex-col gap-3 rounded-lg border border-border p-3">
+    <div className="flex flex-col gap-3 rounded-xl border border-border p-3">
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="flex flex-col gap-1.5">
           <span className="text-sm font-medium">Frequência</span>

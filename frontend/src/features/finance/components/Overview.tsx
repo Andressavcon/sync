@@ -47,7 +47,7 @@ export default function Overview({ version, onChange }: Props) {
           ) : (
             <>
               {salary.data && !salary.data.configured && (
-                <p className="mb-3 rounded-lg border border-primary/40 px-3 py-2 text-sm text-primary">
+                <p className="mb-3 rounded-xl border border-primary/40 px-3 py-2 text-sm text-primary">
                   Cadastre o salário para o app calcular quanto dá para gastar.
                 </p>
               )}

@@ -137,7 +137,7 @@ export default function TransactionModal({ transaction, cards, onClose, onChange
   }
 
   const footer = askScopeFor ? (
-    <div className="flex w-full flex-col gap-2 rounded-lg border border-primary p-3">
+    <div className="flex w-full flex-col gap-2 rounded-xl border border-primary p-3">
       <p className="text-sm">
         Compra parcelada. {askScopeFor === "save" ? "Salvar em:" : "Excluir:"}
       </p>
@@ -172,7 +172,7 @@ export default function TransactionModal({ transaction, cards, onClose, onChange
   return (
     <FormModal titulo={transaction ? "Editar lançamento" : "Novo lançamento"} onClose={onClose} rodape={footer}>
       {isInstallment && (
-        <p className="rounded-lg border border-border bg-bg p-3 text-sm text-muted">
+        <p className="rounded-xl border border-border bg-inset p-3 text-sm text-muted">
           Parcela {transaction?.installmentNumber}/{transaction?.installmentTotal}. Aqui dá para mudar o título e o
           valor; ao salvar, você escolhe se vale só para esta ou também para as próximas.
         </p>
@@ -187,7 +187,7 @@ export default function TransactionModal({ transaction, cards, onClose, onChange
             aria-pressed={kind === k}
             onClick={() => setKind(k)}
             className={[
-              "rounded-lg border px-3 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-60",
+              "rounded-xl border px-3 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-60",
               kind === k ? "border-primary bg-primary text-bg" : "border-border text-muted hover:bg-surface-hover",
             ].join(" ")}
           >

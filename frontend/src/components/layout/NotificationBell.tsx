@@ -54,7 +54,7 @@ export default function NotificationBell() {
         aria-label={unread ? `Notificações (${unread} não lidas)` : "Notificações"}
         aria-expanded={open}
         onClick={() => setOpen(!open)}
-        className="relative rounded-lg p-2 text-text hover:bg-surface-hover"
+        className="relative rounded-full p-2 text-text transition-colors hover:bg-surface-hover"
       >
         <Bell size={20} />
         {unread > 0 && (
@@ -65,7 +65,7 @@ export default function NotificationBell() {
       </button>
 
       {open && (
-        <div className="absolute right-0 z-50 mt-2 w-80 max-w-[calc(100vw-2rem)] rounded-xl border border-border bg-surface shadow-lg">
+        <div className="absolute right-0 z-50 mt-2 w-80 max-w-[calc(100vw-2rem)] glass-strong rounded-3xl">
           <header className="flex items-center justify-between border-b border-border px-4 py-3">
             <h2 className="font-semibold">Notificações</h2>
             {unread > 0 && (

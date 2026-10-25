@@ -1,14 +1,41 @@
 @import "tailwindcss";
 
+/*
+ * "Liquid glass" theme (dark only, section 2.1): translucent panels with blur over a
+ * colored gradient background. Every screen uses these tokens and the `glass` utility,
+ * so the whole look changes here.
+ */
 @theme {
-  --color-bg: #121212;
-  --color-surface: #1e1e1e;
-  --color-surface-hover: #27272a;
+  --color-bg: #0a0a0f; /* page base, and dark text on amber buttons */
+  --color-surface: rgb(255 255 255 / 0.07); /* glass panels */
+  --color-surface-hover: rgb(255 255 255 / 0.13);
+  --color-inset: rgb(0 0 0 / 0.22); /* items inside a panel (cards, rows) */
   --color-primary: #f59e0b;
-  --color-primary-hover: #d97706;
-  --color-text: #e5e5e5;
-  --color-muted: #737373;
-  --color-border: #262626;
+  --color-primary-hover: #fbbf24;
+  --color-text: #f4f4f5;
+  --color-muted: rgb(235 235 245 / 0.58);
+  --color-border: rgb(255 255 255 / 0.12);
+
+  --shadow-glass: inset 0 1px 0 rgb(255 255 255 / 0.12), 0 12px 40px rgb(0 0 0 / 0.35);
+  --shadow-glow: 0 0 24px rgb(245 158 11 / 0.35);
+}
+
+/* Frosted panel: translucent, blurred background, light edge on top */
+@utility glass {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-glass);
+  backdrop-filter: blur(28px) saturate(160%);
+  -webkit-backdrop-filter: blur(28px) saturate(160%);
+}
+
+/* Windows over everything (modals, menus): more opaque, so text stays readable */
+@utility glass-strong {
+  background-color: rgb(28 28 34 / 0.72);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-glass);
+  backdrop-filter: blur(36px) saturate(170%);
+  -webkit-backdrop-filter: blur(36px) saturate(170%);
 }
 
 html {
@@ -16,5 +43,39 @@ html {
 }
 
 body {
-  @apply bg-bg text-text;
+  @apply text-text antialiased;
+  background-color: var(--color-bg);
+  min-height: 100dvh;
+}
+
+/* The colors behind the glass: soft amber, blue and violet lights on the dark base */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(40rem 32rem at 12% 8%, rgb(245 158 11 / 0.22), transparent 70%),
+    radial-gradient(36rem 30rem at 92% 12%, rgb(59 130 246 / 0.2), transparent 70%),
+    radial-gradient(42rem 34rem at 78% 92%, rgb(139 92 246 / 0.22), transparent 70%),
+    radial-gradient(30rem 26rem at 20% 85%, rgb(20 184 166 / 0.12), transparent 70%);
+}
+
+/* Phones: lighter blur (it is heavy on simpler devices) */
+@media (max-width: 640px) {
+  .glass {
+    backdrop-filter: blur(18px) saturate(150%);
+    -webkit-backdrop-filter: blur(18px) saturate(150%);
+  }
+}
+
+/* People who asked the system for less transparency get solid panels */
+@media (prefers-reduced-transparency: reduce) {
+  .glass,
+  .glass-strong {
+    background-color: #1c1c22;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
 }

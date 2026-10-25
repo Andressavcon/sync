@@ -151,7 +151,7 @@ export default function ProgramModal({ program, onClose, onChange }: Props) {
             </Button>
           </div>
 
-          <ul className="flex flex-col divide-y divide-border rounded-lg border border-border">
+          <ul className="flex flex-col divide-y divide-border rounded-xl border border-border">
             {program.sessions.length === 0 && (
               <li className="px-3 py-4 text-center text-sm text-muted">Nenhum dia ainda.</li>
             )}

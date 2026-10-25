@@ -20,7 +20,7 @@ export default function LoginPage() {
 
   return (
     <main className="flex min-h-screen items-center justify-center p-4">
-      <div className="flex w-full max-w-sm flex-col items-center gap-6 rounded-2xl border border-border bg-surface p-8 text-center">
+      <div className="glass flex w-full max-w-sm flex-col items-center gap-6 rounded-3xl p-8 text-center">
         <span className="text-4xl font-bold">
           Sync<span className="text-primary">.</span>
         </span>

@@ -241,7 +241,7 @@ export default function CardModal({ card, initialDate, tags, onClose, onChanged 
           </div>
         )}
         {recurrenceId && (
-          <div className="flex flex-wrap items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm">
+          <div className="flex flex-wrap items-center gap-2 rounded-xl border border-border px-3 py-2 text-sm">
             <Repeat size={16} className="text-primary" />
             <span className="flex-1">
               {recurrence ? describeRecurrence(recurrence) : "Card recorrente"}
@@ -312,7 +312,7 @@ export default function CardModal({ card, initialDate, tags, onClose, onChanged 
         {error && <p className="text-sm text-red-400">{error}</p>}
 
         {askScopeFor ? (
-          <div className="flex flex-col gap-3 rounded-lg border border-primary p-3">
+          <div className="flex flex-col gap-3 rounded-xl border border-primary p-3">
             <p className="text-sm">
               Este card se repete. {askScopeFor === "save" ? "Salvar as mudanças em:" : "Excluir:"}
             </p>

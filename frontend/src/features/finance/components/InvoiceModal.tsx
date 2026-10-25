@@ -63,7 +63,7 @@ export default function InvoiceModal({ card, initialMonth, onClose, onChange }: 
           <ChevronLeft size={18} />
         </Button>
         <div className="flex-1 text-center">
-          <p className="font-medium capitalize">Fatura de {monthLabel(month)}</p>
+          <p className="font-medium first-letter:uppercase">Fatura de {monthLabel(month)}</p>
           {invoice?.month === month && (
             <p className="text-xs text-muted">Vence em {format(parseISO(invoice.dueDate), "dd/MM/yyyy")}</p>
           )}
@@ -78,7 +78,7 @@ export default function InvoiceModal({ card, initialMonth, onClose, onChange }: 
         <p className="text-sm text-muted">Carregando…</p>
       ) : (
         <>
-          <div className="flex items-center justify-between rounded-lg border border-border bg-bg p-3">
+          <div className="flex items-center justify-between rounded-xl border border-border bg-inset p-3">
             <div>
               <p className="text-sm text-muted">Total da fatura</p>
               <p className="text-2xl font-semibold tabular-nums">{formatBRL(invoice.total)}</p>

@@ -57,7 +57,7 @@ export default function MonthHistory({ refreshKey }: Props) {
   return (
     <Card>
       <header className="mb-3 flex items-center gap-1">
-        <h2 className="flex-1 text-lg font-semibold capitalize">
+        <h2 className="flex-1 text-lg font-semibold first-letter:uppercase">
           {format(month, "MMMM yyyy", { locale: ptBR })}
         </h2>
         <Button variant="ghost" size="icon" aria-label="Mês anterior" onClick={() => setMonth(addMonths(month, -1))}>
@@ -86,7 +86,7 @@ export default function MonthHistory({ refreshKey }: Props) {
               type="button"
               onClick={() => setSelected(selected === key ? null : key)}
               className={[
-                "flex aspect-square flex-col items-center justify-center rounded-lg text-sm transition-colors",
+                "flex aspect-square flex-col items-center justify-center rounded-xl text-sm transition-colors",
                 isSameMonth(d, month) ? "" : "text-muted/40",
                 isSameDay(d, today) ? "border border-primary" : "border border-transparent",
                 selected === key ? "bg-surface-hover" : "hover:bg-surface-hover",

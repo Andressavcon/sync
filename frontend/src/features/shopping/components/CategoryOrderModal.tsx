@@ -49,7 +49,7 @@ export default function CategoryOrderModal({ categories, onClose, onSave }: Prop
         {order.map((category, index) => (
           <li
             key={category.id}
-            className="flex items-center gap-2 rounded-lg border border-border px-3 py-2"
+            className="flex items-center gap-2 rounded-xl border border-border px-3 py-2"
           >
             <span className="w-6 text-sm text-muted">{index + 1}.</span>
             <span className="flex-1">{category.name}</span>

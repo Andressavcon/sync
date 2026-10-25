@@ -20,7 +20,7 @@ export default function CardItem({ item, showDate, showCountdown, onClick }: Pro
   return (
     <div
       onClick={onClick}
-      className="cursor-pointer rounded-lg border border-border bg-bg p-3 transition-colors hover:bg-surface-hover"
+      className="cursor-pointer rounded-xl border border-border bg-inset p-3 transition-colors hover:bg-surface-hover"
     >
       {card.tags.length > 0 && (
         <div className="mb-1.5 flex flex-wrap gap-1">

@@ -42,7 +42,7 @@ export default function FinancePage() {
       <h1 className="text-2xl font-semibold">Finanças</h1>
 
       {(error ?? cards.error) && (
-        <p className="rounded-lg border border-red-400/40 px-3 py-2 text-sm text-red-400">{error ?? cards.error}</p>
+        <p className="rounded-xl border border-red-400/40 px-3 py-2 text-sm text-red-400">{error ?? cards.error}</p>
       )}
 
       <Overview version={version} onChange={change} />

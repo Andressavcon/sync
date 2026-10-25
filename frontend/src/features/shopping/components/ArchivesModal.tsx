@@ -36,7 +36,7 @@ export default function ArchivesModal({ onClose }: { onClose: () => void }) {
           const open = openId === archive.id;
           const bought = archive.items.filter((i) => i.purchased).length;
           return (
-            <li key={archive.id} className="rounded-lg border border-border">
+            <li key={archive.id} className="rounded-xl border border-border">
               <button
                 type="button"
                 aria-expanded={open}
@@ -44,7 +44,7 @@ export default function ArchivesModal({ onClose }: { onClose: () => void }) {
                 className="flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-surface-hover"
               >
                 <span className="flex-1">
-                  <span className="block font-medium capitalize">
+                  <span className="block font-medium first-letter:uppercase">
                     {format(parseISO(archive.completedAt), "EEEE, d 'de' MMMM", { locale: ptBR })}
                   </span>
                   <span className="block text-xs text-muted">

@@ -25,12 +25,12 @@ export default function Checkbox({
 			/>
 			<span
 				className={[
-					"flex h-6 w-6 items-center justify-center rounded-md border transition-colors",
+					"flex h-6 w-6 items-center justify-center rounded-lg border transition-all",
 					"peer-focus-visible:ring-2 peer-focus-visible:ring-primary",
 					"peer-disabled:opacity-50",
 					checked
-						? "border-primary bg-primary text-bg"
-						: "border-border bg-surface",
+						? "border-primary bg-primary text-bg shadow-glow"
+						: "border-border bg-inset",
 				].join(" ")}
 			>
 				{checked && <Check size={16} strokeWidth={3} />}

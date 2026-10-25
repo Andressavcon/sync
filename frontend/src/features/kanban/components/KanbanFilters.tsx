@@ -58,7 +58,7 @@ export default function KanbanFilters({
     );
 
   return (
-    <div className="flex flex-col gap-3 rounded-xl border border-border bg-surface p-4">
+    <div className="glass flex flex-col gap-3 rounded-3xl p-4">
       <div className="flex flex-wrap items-center gap-2">
         <span className="mr-1 text-sm text-muted">Mostrar:</span>
         <Chip active={visibility.overdue} onClick={() => toggle("overdue")}>

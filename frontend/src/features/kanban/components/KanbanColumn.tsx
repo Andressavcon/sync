@@ -56,14 +56,14 @@ export default function KanbanColumn({
     <section
       ref={setNodeRef}
       className={[
-        "min-h-40 rounded-xl border bg-surface p-4 transition-shadow",
-        highlight ? "border-primary" : "border-border",
+        "glass min-h-40 rounded-3xl p-4 transition-shadow",
+        highlight ? "ring-1 ring-primary/70" : "",
         isOver ? "ring-2 ring-primary" : "",
       ].join(" ")}
     >
       <header className="mb-3 flex items-center gap-2">
         <div className="min-w-0 flex-1">
-          <h2 className="flex items-center gap-2 text-lg font-semibold capitalize">
+          <h2 className="flex items-center gap-2 text-lg font-semibold">
             {title}
             {highlight && <Badge variant="primary">Hoje</Badge>}
           </h2>

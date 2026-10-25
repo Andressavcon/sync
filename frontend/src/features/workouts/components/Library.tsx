@@ -26,7 +26,7 @@ function Draggable({
       {...attributes}
       {...listeners}
       onClick={onClick}
-      className={`cursor-pointer select-none rounded-lg border border-border bg-bg transition-colors hover:bg-surface-hover ${className} ${isDragging ? "opacity-40" : ""}`}
+      className={`cursor-pointer select-none rounded-xl border border-border bg-inset transition-colors hover:bg-surface-hover ${className} ${isDragging ? "opacity-40" : ""}`}
     >
       {children}
     </div>
@@ -68,7 +68,7 @@ export default function Library({ library, onAdd, onChange }: Props) {
           {library.programs.map((program) => {
             const open = openProgramId === program.id;
             return (
-              <div key={program.id} className="rounded-lg border border-border">
+              <div key={program.id} className="rounded-xl border border-border">
                 <div className="flex items-center">
                   <button
                     type="button"

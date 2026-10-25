@@ -24,8 +24,8 @@ export default function TodayCard({ day, onStart, onToggleDone, onRemove }: Prop
     <section
       ref={setNodeRef}
       className={[
-        "rounded-xl border bg-surface p-4 transition-shadow lg:p-5",
-        isOver ? "border-primary ring-2 ring-primary" : "border-border",
+        "glass rounded-3xl p-5 transition-shadow lg:p-6",
+        isOver ? "ring-2 ring-primary" : "",
       ].join(" ")}
     >
       <header className="mb-4 flex flex-wrap items-center gap-3">
@@ -47,7 +47,7 @@ export default function TodayCard({ day, onStart, onToggleDone, onRemove }: Prop
       </header>
 
       {blocks.length === 0 ? (
-        <p className="rounded-lg border border-dashed border-border py-10 text-center text-sm text-muted">
+        <p className="rounded-xl border border-dashed border-border py-10 text-center text-sm text-muted">
           Arraste um bloco da biblioteca para cá, ou toque nele.
         </p>
       ) : (

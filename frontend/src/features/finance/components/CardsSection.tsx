@@ -54,7 +54,7 @@ export default function CardsSection({ cards, onChange }: Props) {
         {active.map((summary) => {
           const { card, currentInvoice, futureCommitted } = summary;
           return (
-            <div key={card.id} className="rounded-xl border border-border bg-surface p-4">
+            <div key={card.id} className="glass rounded-3xl p-5">
               <div className="flex items-start gap-2">
                 <button type="button" className="min-w-0 flex-1 text-left" onClick={() => setOpen(summary)}>
                   <p className="flex items-center gap-2 text-lg font-semibold">
@@ -93,7 +93,7 @@ export default function CardsSection({ cards, onChange }: Props) {
           {showArchived && (
             <ul className="mt-2 flex flex-col gap-2">
               {archived.map(({ card }) => (
-                <li key={card.id} className="flex items-center justify-between rounded-lg border border-border px-3 py-2">
+                <li key={card.id} className="flex items-center justify-between rounded-xl border border-border px-3 py-2">
                   <span className="text-muted">{card.name}</span>
                   <Button
                     variant="secondary"

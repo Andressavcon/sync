@@ -28,26 +28,29 @@ Módulos previstos: Dashboard, Kanban (tarefas e eventos), Treinos, Lista de com
 - **[definido]** Interface intuitiva.
 - **[definido]** Notificações somente dentro do app, nada fora dele.
 
-### 2.1 Paleta de cores
+### 2.1 Visual e paleta de cores
 
-- **[definido]** Cores principais do tema:
+- **[definido]** Estilo **"liquid glass"** (como o visionOS e o iOS novo): painéis de vidro translúcidos com desfoque sobre um fundo escuro com manchas de cor suaves. Continua só tema escuro.
+- **[definido]** Fundo: escuro com luzes de cor desfocadas (âmbar, azul, violeta e um toque de verde-água), feito em CSS, sem imagem.
+- **[definido]** Cor de destaque: o âmbar de sempre (é a marca do app).
+- **[definido]** Menu: barra flutuante de ícones redondos à esquerda no computador (o nome aparece ao passar o mouse) e barra de vidro embaixo no celular. Cabeçalho em pílula flutuante com o logo e a data.
 
-| Cor | Hex | Uso |
+| Token | Valor | Uso |
 |---|---|---|
-| Background | `#121212` | Cor de fundo principal da aplicação |
-| Surface | `#1e1e1e` | Superfícies, cards e containers |
-| Surface Hover | `#27272a` | Estado de hover em elementos de superfície |
-| Primary | `#f59e0b` | Cor de destaque principal (botões, links, ícones) |
-| Primary Hover | `#d97706` | Estado de hover da cor primária |
-| Text Main | `#e5e5e5` | Texto principal (títulos, conteúdo) |
-| Text Muted | `#737373` | Textos secundários, legendas e placeholders |
-| Border | `#262626` | Bordas e divisórias |
+| Background | `#0a0a0f` | Base da página (por baixo das luzes de cor) |
+| Surface | branco 7% | Painéis de vidro (`glass`) |
+| Surface Hover | branco 13% | Hover, botões secundários |
+| Inset | preto 22% | Itens dentro de um painel (cards, linhas, campos) |
+| Primary | `#f59e0b` | Destaque: botão principal (com brilho), item ativo, links |
+| Primary Hover | `#fbbf24` | Hover da cor de destaque |
+| Text Main | `#f4f4f5` | Texto principal |
+| Text Muted | branco-azulado 58% | Textos secundários e placeholders |
+| Border | branco 12% | Bordas finas do vidro e divisórias |
 
-- **[definido]** Botões: primário sólido na cor Primary, com Primary Hover no hover; secundário em tom neutro de Surface; estado desabilitado em cinza apagado.
-- **[definido]** Cards/superfícies usam Surface como fundo, título em Text Main, texto de apoio em Text Muted, e link "Ver mais" na cor Primary.
-- **[definido]** Inputs: fundo Surface, borda Border; campo em foco ganha borda Primary; campo desabilitado com texto apagado.
-- **[definido]** Estados e destaques: badges "Ativo" (Primary), "Inativo" e "Em andamento" (neutros); mensagens de informação importante em Primary.
-- **[definido]** Ícones seguem Text Main/Primary conforme o contexto (ex: seta de ação em Primary).
+- **[definido]** Vidro: `glass` para painéis (desfoque 28 px, borda clara e brilho na borda de cima) e `glass-strong`, mais opaco, para janelas e menus, para o texto continuar legível.
+- **[definido]** Botões em pílula: principal âmbar com brilho; secundário em vidro; desabilitado apagado. Cantos dos painéis bem arredondados (24 px).
+- **[definido]** No celular o desfoque é mais leve (desempenho). Quem ativa "reduzir transparência" no sistema recebe painéis sólidos.
+- **[definido]** Campos: fundo Inset, borda Border; em foco, borda e anel âmbar.
 
 ## 3. Módulos e andamento
 

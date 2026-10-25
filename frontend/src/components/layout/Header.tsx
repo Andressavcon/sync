@@ -1,20 +1,21 @@
-import { LogOut, Menu } from "lucide-react";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { LogOut } from "lucide-react";
 import { loginEnabled, signOut } from "@/data/auth";
+import { useNow } from "@/hooks/useNow";
 import NotificationBell from "./NotificationBell";
 
-export default function Header({ onMenu }: { onMenu: () => void }) {
+/** Floating glass pill at the top: logo, today's date, notifications and logout. */
+export default function Header() {
+  const now = useNow();
+
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-border bg-bg/90 px-4 backdrop-blur">
-      <button
-        type="button"
-        aria-label="Abrir menu"
-        onClick={onMenu}
-        className="rounded-lg p-2 hover:bg-surface-hover lg:hidden"
-      >
-        <Menu size={20} />
-      </button>
-      <span className="text-lg font-bold lg:hidden">
+    <header className="glass sticky top-3 z-30 mx-3 flex h-14 items-center gap-4 rounded-full px-5 lg:mx-8">
+      <span className="text-lg font-bold">
         Sync<span className="text-primary">.</span>
+      </span>
+      <span className="hidden text-sm text-muted first-letter:uppercase sm:block">
+        {format(now, "EEEE, d 'de' MMMM", { locale: ptBR })}
       </span>
       <div className="ml-auto flex items-center gap-1">
         <NotificationBell />
@@ -24,7 +25,7 @@ export default function Header({ onMenu }: { onMenu: () => void }) {
             aria-label="Sair"
             title="Sair"
             onClick={() => void signOut()}
-            className="rounded-lg p-2 text-muted hover:bg-surface-hover hover:text-text"
+            className="rounded-full p-2 text-muted transition-colors hover:bg-surface-hover hover:text-text"
           >
             <LogOut size={20} />
           </button>

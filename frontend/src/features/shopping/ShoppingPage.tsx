@@ -86,7 +86,7 @@ export default function ShoppingPage() {
       </div>
 
       {offline && (
-        <p className="flex items-center gap-2 rounded-lg border border-primary/40 px-3 py-2 text-sm text-primary">
+        <p className="flex items-center gap-2 rounded-xl border border-primary/40 px-3 py-2 text-sm text-primary">
           <WifiOff size={16} className="shrink-0" />
           Sem internet: mostrando a última lista salva. Dá para marcar os itens normalmente
           {pending > 0 &&
@@ -95,7 +95,7 @@ export default function ShoppingPage() {
         </p>
       )}
       {error && (
-        <p className="rounded-lg border border-red-400/40 px-3 py-2 text-sm text-red-400">{error}</p>
+        <p className="rounded-xl border border-red-400/40 px-3 py-2 text-sm text-red-400">{error}</p>
       )}
 
       <div className="grid gap-4 lg:grid-cols-[1fr_20rem] lg:items-start">

@@ -14,6 +14,7 @@ import { ptBR } from "date-fns/locale";
 import { Plus } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { getErrorMessage } from "@/data/api";
+import { capitalizeFirst } from "@/lib/format";
 import {
   kanbanRepository,
   type Board,
@@ -131,7 +132,7 @@ export default function KanbanPage() {
       </div>
 
       {(error || actionError) && (
-        <p className="rounded-lg border border-red-400/40 px-3 py-2 text-sm text-red-400">
+        <p className="rounded-xl border border-red-400/40 px-3 py-2 text-sm text-red-400">
           {actionError ?? error}
         </p>
       )}
@@ -161,7 +162,7 @@ export default function KanbanPage() {
             <KanbanColumn
               key={day.date}
               id={`day:${day.date}`}
-              title={format(parseISO(day.date), "EEEE", { locale: ptBR })}
+              title={capitalizeFirst(format(parseISO(day.date), "EEEE", { locale: ptBR }))}
               subtitle={longDate(day.date)}
               highlight={day.isToday}
               droppable

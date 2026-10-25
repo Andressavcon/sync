@@ -21,7 +21,7 @@ export default function BlockItem({ block, readOnly, onStart, onToggleDone, onRe
   const currentStep = (buildTimerSteps(block.steps)[block.stepIndex]?.stepIndex ?? 0) + 1;
 
   return (
-    <li className="rounded-lg border border-border bg-bg p-3">
+    <li className="rounded-xl border border-border bg-inset p-3">
       <div className="flex flex-wrap items-center gap-3">
         <Checkbox
           label={`Marcar ${block.title} como concluído`}

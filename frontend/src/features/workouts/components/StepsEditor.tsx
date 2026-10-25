@@ -57,7 +57,7 @@ export default function StepsEditor({ steps, onChange }: Props) {
   return (
     <div className="flex flex-col gap-3">
       {steps.length === 0 && (
-        <p className="rounded-lg border border-dashed border-border py-6 text-center text-sm text-muted">
+        <p className="rounded-xl border border-dashed border-border py-6 text-center text-sm text-muted">
           Nenhuma etapa ainda.
         </p>
       )}
@@ -66,7 +66,7 @@ export default function StepsEditor({ steps, onChange }: Props) {
         <div
           key={index}
           className={[
-            "flex flex-col gap-3 rounded-lg border bg-bg p-3",
+            "flex flex-col gap-3 rounded-xl border bg-inset p-3",
             isStepValid(step) ? "border-border" : "border-red-400/60",
           ].join(" ")}
         >

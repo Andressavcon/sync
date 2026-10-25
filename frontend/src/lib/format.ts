@@ -9,3 +9,8 @@ export function parseBRL(texto: string): number {
   const n = Number(normal);
   return Number.isFinite(n) ? n : NaN;
 }
+
+/** "segunda-feira" -> "Segunda-feira" (CSS `capitalize` would make "Segunda-Feira") */
+export function capitalizeFirst(text: string): string {
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}

@@ -102,19 +102,19 @@ export default function WorkoutsPage() {
     <div className="mx-auto flex max-w-[1500px] flex-col gap-4">
       <div>
         <h1 className="text-2xl font-semibold">Treinos</h1>
-        <p className="text-sm capitalize text-muted">
+        <p className="text-sm first-letter:uppercase text-muted">
           {format(now, "EEEE, d 'de' MMMM", { locale: ptBR })}
         </p>
       </div>
 
       {offline && (
-        <p className="flex items-center gap-2 rounded-lg border border-primary/40 px-3 py-2 text-sm text-primary">
+        <p className="flex items-center gap-2 rounded-xl border border-primary/40 px-3 py-2 text-sm text-primary">
           <WifiOff size={16} className="shrink-0" />
           Sem internet: o cronômetro e as marcações funcionam e são enviados quando a conexão voltar.
         </p>
       )}
       {pageError && (
-        <p className="rounded-lg border border-red-400/40 px-3 py-2 text-sm text-red-400">{pageError}</p>
+        <p className="rounded-xl border border-red-400/40 px-3 py-2 text-sm text-red-400">{pageError}</p>
       )}
 
       <DndContext
@@ -150,7 +150,7 @@ export default function WorkoutsPage() {
 
         <DragOverlay>
           {draggingTitle && (
-            <div className="rounded-lg border border-primary bg-surface px-3 py-2 text-sm shadow-lg">
+            <div className="rounded-xl border border-primary bg-surface px-3 py-2 text-sm shadow-lg">
               {draggingTitle}
             </div>
           )}

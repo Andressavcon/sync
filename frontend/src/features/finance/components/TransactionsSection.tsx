@@ -52,7 +52,7 @@ export default function TransactionsSection({ cards, version, onChange }: Props)
         <Button variant="ghost" size="icon" aria-label="Mês anterior" onClick={() => setMonth(shiftMonth(month, -1))}>
           <ChevronLeft size={16} />
         </Button>
-        <h2 className="text-lg font-semibold capitalize">{monthLabel(month)}</h2>
+        <h2 className="text-lg font-semibold first-letter:uppercase">{monthLabel(month)}</h2>
         <Button variant="ghost" size="icon" aria-label="Próximo mês" onClick={() => setMonth(shiftMonth(month, 1))}>
           <ChevronRight size={16} />
         </Button>

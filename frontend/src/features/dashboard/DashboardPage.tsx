@@ -71,7 +71,7 @@ export default function DashboardPage() {
     <div className="mx-auto flex max-w-6xl flex-col gap-4">
       <div>
         <h1 className="text-2xl font-semibold">Olá!</h1>
-        <p className="text-sm capitalize text-muted">
+        <p className="text-sm first-letter:uppercase text-muted">
           {format(parseISO(data.today), "EEEE, d 'de' MMMM", { locale: ptBR })}
         </p>
       </div>
@@ -89,7 +89,7 @@ export default function DashboardPage() {
                   ))}
                 </ul>
                 {kanban.late.length > 0 && (
-                  <div className="mt-3 rounded-lg border border-red-400/40 p-3">
+                  <div className="mt-3 rounded-xl border border-red-400/40 p-3">
                     <p className="mb-1 flex items-center gap-1.5 text-sm font-medium text-red-400">
                       <AlarmClock size={14} /> Atrasados
                     </p>
