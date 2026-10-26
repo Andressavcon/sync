@@ -15,6 +15,13 @@ def test_supabase_url_gets_the_psycopg_driver():
     assert make(database_url=POSTGRES_URL).database_url.startswith("postgresql+psycopg://")
 
 
+def test_cors_origins_are_normalized():
+    origins = make(
+        cors_origins=[" https://sync.vercel.app/ ", "http://localhost:5173"]
+    ).cors_origins
+    assert origins == ["https://sync.vercel.app", "http://localhost:5173"]
+
+
 def test_production_needs_login_and_postgres():
     with pytest.raises(ValidationError, match="SUPABASE_URL is required"):
         make(environment="production", database_url=POSTGRES_URL)

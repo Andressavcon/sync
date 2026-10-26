@@ -31,6 +31,12 @@ class Settings(BaseSettings):
                 return "postgresql+psycopg://" + url.removeprefix(prefix)
         return url
 
+    @field_validator("cors_origins")
+    @classmethod
+    def normalize_origins(cls, origins: list[str]) -> list[str]:
+        """Browsers send the origin without a trailing slash, so "https://x.app/" never matched."""
+        return [origin.strip().rstrip("/") for origin in origins if origin.strip()]
+
     @model_validator(mode="after")
     def production_needs_login(self) -> Settings:
         """Safety lock: a published API without login would show everyone's data."""
