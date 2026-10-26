@@ -14,6 +14,10 @@ To run it on your machine, clone the repository (see [Running locally](#running-
   <img src="screenshots/1-dashboard.png" alt="Dashboard" width="100%">
 </p>
 
+<p>
+  <img src="screenshots/9-kanban.png" alt="Kanban: the current week" width="100%">
+</p>
+
 | Finance | Workouts | Shopping list |
 |---|---|---|
 | ![Finance](screenshots/4-financas.png) | ![Workouts](screenshots/2-treinos.png) | ![Shopping list](screenshots/3-compras.png) |
